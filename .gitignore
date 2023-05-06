@@ -1,2 +1,2 @@
-/express/node_modules
-/flask/stock-data
+/server/express/node_modules
+/server/flask/stock-data

@@ -47,8 +47,6 @@ app.post("/price",async(req,res)=>{
     res.json({name,prev_close,open,volume,market_cap,PEratio})
 });
 
-//test();
-
 app.post('/profile',async(req,res)=>{
     const {script} = req.body;
     const profiledata = await axios.request({
