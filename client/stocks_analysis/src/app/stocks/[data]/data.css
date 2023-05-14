@@ -1,0 +1,39 @@
+.alldata{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+    padding: 80px;
+}
+
+.subinfo{
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr;
+}
+
+.subabout{
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr;
+    margin-top: 10px;
+}
+
+.price{
+    font-size: 60px;
+}
+
+.chartbtn{
+    display: flex;
+}
+
+.stockinfo{
+    flex: 0.3;
+}
+
+.charts{
+    flex: 0.7;
+}
+
+.linecharts{
+    display: block;
+    width: 100%;
+    height: 80%;
+}

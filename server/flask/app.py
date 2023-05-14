@@ -1,4 +1,6 @@
-from flask import Flask,jsonify,request
+from flask import Flask,jsonify,request,send_file
+import requests
+from flask_cors import CORS
 import logging
 import json
 import time
@@ -11,8 +13,7 @@ import os.path
 
 
 app = Flask(__name__)
-
-
+CORS(app)
 
 @app.route("/history",methods=['POST'])
 def stockdata():
@@ -37,10 +38,25 @@ def stockdata():
             try:
                 with open(path):
                     db = pd.read_csv(path)
-                    db.to_json (jsonpath)
+                    data = db.to_dict(orient='records')
+                    json_data = []
+                    #final_data = {script:json_data}
+                    for row in data:
+                        json_data.append({ 
+                            'Date': row['Date'],
+                            'Open': row['Open'],
+                            'High':row['High'],
+                            'Low':row['Low'],
+                            'Close':row['Close'],
+                            'Volume':row['Volume']
+                            })
+                    with open(jsonpath, 'w') as json_file:
+                        json.dump(json_data, json_file)
+                    #db.to_json (jsonpath)
                     f = open(jsonpath)
-                    data = json.load(f)
-                    return jsonify(data)
+                    jdata = json.load(f)
+                    f.close()
+                    return jsonify(jdata)
             except IOError:
                 logging.exception('')
         else:
@@ -56,14 +72,30 @@ def stockdata():
             try:
                 with open(path):
                     db = pd.read_csv(path)
-                    db.to_json (jsonpath)
+                    data = db.to_dict(orient='records')
+                    json_data = []
+                    #final_data = {script:json_data}
+                    for row in data:
+                        json_data.append({ 
+                            'Date': row['Date'],
+                            'Open': row['Open'],
+                            'High':row['High'],
+                            'Low':row['Low'],
+                            'Close':row['Close'],
+                            'Volume':row['Volume']
+                            })
+                    with open(jsonpath, 'w') as json_file:
+                        json.dump(json_data, json_file)
+                    #db.to_json (jsonpath)
+                    #r =requests.post(f"http://localhost:3000/{script}",files=)
                     f = open(jsonpath)
-                    data = json.load(f)
-                    return jsonify(data)
+                    jdata = json.load(f)
+                    f.close()
+                    return jsonify(jdata)
             except IOError:
                 logging.exception('')
         
     
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

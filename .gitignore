@@ -1,2 +1,3 @@
 /server/express/node_modules
 /server/flask/stock-data
+/server/database/node_modules
