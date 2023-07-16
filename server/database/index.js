@@ -75,6 +75,15 @@ app.post('/auth',auth,async(req,res)=>{
     }
 })
 
+app.post('/getData',auth,async(req,res)=>{
+    try {
+        const check = await pool.query("SELECT user_id,user_name,email,user_age,gender,contact,country FROM Users WHERE user_id=$1",[req.user]);
+        res.json(check.rows)
+    } catch (error) {
+        console.error(error.message);
+    }
+})
+
 app.post('/mailauth',validate,async(req,res)=>{
     try {
         const verifyMail = await pool.query("UPDATE Users SET status='Verified' WHERE user_id=$1",[req.user]);
@@ -102,7 +111,7 @@ app.post('/verify',auth,async(req,res)=>{
         let mailGenerator = new mailgen({
             theme:"default",
             product:{
-                name:"Chillax",
+                name:"Stock Analysis",
                 link:"https://mailgen.js/"
             }
         })
@@ -112,7 +121,14 @@ app.post('/verify',auth,async(req,res)=>{
         let response = {
             body:{
                 name:getMail.rows[0].user_name,
-                intro:"Click the link to activate your account. \nhttp://localhost:3000/auth/"+activate,
+                intro:"Click the link to activate your account.",
+                action:{
+                    button: {
+                        color:"#0072F5",
+                        text:"Verify",
+                        link:"http://localhost:3000/auth/"+activate
+                        }
+                    }
             }
         }
 
