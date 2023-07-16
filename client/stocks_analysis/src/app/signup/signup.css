@@ -1,0 +1,33 @@
+.reglay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.regbox{
+    
+    border-radius: 20px;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 8px 100px 40px rgba(0, 114, 245,0.3);
+    
+}
+
+.regbox h1{
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.regbox form{
+    display: grid;
+    grid-template-columns: 300px 300px;
+    row-gap: 35px;
+    column-gap: 10px;
+    margin-bottom: 40px;
+}
+
+.custom-button {
+    justify-content: flex-start;
+    text-align: left;
+  }

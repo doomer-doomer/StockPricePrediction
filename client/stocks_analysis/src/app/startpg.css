@@ -1,19 +1,243 @@
-.startpage{
-    width: 100%;
-    height: 100vh;
-
+.tableGrid{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    row-gap: 5px;
 }
 
-.hearder{
+.innertable{
     display: flex;
 }
 
-.startpage .search{
-    display: flex;
+.tableGrid button{
+    border: none;
+    border-radius: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 5px;
+}
+
+.parentTable{
+    margin: 20px;
+}
+
+.indextable{
+    padding: 40px;
+    text-align: center;
+}
+
+.header{
+   display: flex;
+   width: 100%;
+    margin:20px;
    
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    z-index: 3;
+    
+}
+
+.loginuser{
+    flex: 1;
+    z-index: 2;
+    text-align: center;
     margin: auto;
 }
+
+.title{
+    flex: 10;
+    font-size: x-large;
+    z-index: 2;
+    
+  
+}
+
+
+
+.indices{
+    display: block;
+
+   
+    padding: 80px;
+}
+
+.midstartpage{
+  
+    
+}
+
+.subindices{
+    margin-top: 20px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+}
+
+.subindices2{
+    margin-top: 20px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+}
+
+.indiceInfo{
+    text-align: center;
+    margin: auto;
+}
+
+.indiceInfo2{
+    text-align: center;
+    padding-right: 20px;
+    margin: auto;
+}
+
+.subindiceInfo {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    row-gap: 5px;
+    column-gap: 10px;
+    margin: auto;
+    margin-top: 20px;
+    
+}
+
+.subindices .subindicesChart{
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.subindices2 .subindicesChart{
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* .upperStartpg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+} */
+
+.indicestitle{
+    display: flex;
+    width: 100%;
+    margin-top: 40px;
+}
+.indicestitle h1{
+    text-align: center;
+    
+    margin-left: auto;
+    margin-right: auto;
+    font-size: xxx-large;
+}
+
+
+
+.timedetails{
+    text-align: center;
+  }
+
+  .startpglay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .topSearchSec{
+    
+  }
+
+  .startpgpic{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    width: 100%;
+  }
+
+  .startpage .search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+  }
+
+  .subSearch{
+    display: flex;
+  }
+
+  .startpgpic img{
+    display: absolute;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .buisnessNews{
+    padding: 60px;
+    display: grid;
+    grid-template-columns: auto auto auto  ;
+    row-gap: 40px;
+  }
+
+  .news{
+    padding: 80px;
+  }
+
+  @media screen and (max-width:1400px) {
+    .buisnessNews{
+        padding: 60px;
+        display: grid;
+        grid-template-columns: auto auto   ;
+        row-gap: 40px;
+      }
+  }
+
+  @media screen and (max-width:1000px) {
+    .buisnessNews{
+        padding: 60px;
+        display: grid;
+        grid-template-columns: auto ;
+        row-gap: 40px;
+      }
+  }
+
+  @media screen and (max-width:420px) {
+
+    .news{
+        padding: 0px;
+      }
+
+    .buisnessNews{
+        padding: 0px;
+        padding-top: 20px;
+        display: grid;
+        grid-template-columns: auto ;
+        row-gap: 20px;
+      }
+
+      
+    
+      .startpgpic img{
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        
+        object-fit: cover;
+        z-index: 1;
+      }
+
+     
+
+      .search{
+        display: absolute;
+      }
+    
+  }
+
+  

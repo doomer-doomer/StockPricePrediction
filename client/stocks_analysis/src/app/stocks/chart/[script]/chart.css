@@ -1,0 +1,14 @@
+.guiforcharts{
+    display: block;
+}
+
+.guiOptions{
+    display: flex;
+
+}
+
+.totalchartarea{
+    width: 100%;
+    height: 100vh;
+    
+}

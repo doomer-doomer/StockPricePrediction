@@ -1,23 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600&display=swap');
+
+
+
+.totalscriptpage{
+   
+}
+
+.analysisContent{
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.subindicesChart{
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
 .alldata{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: block;
+    grid-template-columns: 1fr 1.5fr;
     column-gap: 40px;
     padding: 80px;
+    
 }
 
 .subinfo{
     display: grid;
-    grid-template-columns: 0.5fr 0.5fr;
+    grid-template-columns: 0.2fr 0.2fr;
+    row-gap: 0px;
+    margin-top: 10px;
 }
 
 .subabout{
     display: grid;
-    grid-template-columns: 0.5fr 0.5fr;
+    grid-template-columns: 0.4fr 0.4fr;
     margin-top: 10px;
 }
 
 .price{
     font-size: 60px;
+    
 }
 
 .chartbtn{
@@ -37,3 +61,182 @@
     width: 100%;
     height: 80%;
 }
+
+.profit{
+    display: flex;
+}
+
+.profit h2{
+    display: flex;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+}
+
+.areachart{
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.ficat{
+    margin: 40px;
+    margin-left: 60px;
+    margin-right: 60px;
+    display: grid;
+    grid-template-columns: 0.5fr 1fr ;
+    column-gap: 60px;
+    row-gap: 100px;
+ 
+}
+
+.subcat2 li{
+    transition: opacity 0.3s ease;
+}
+.subcat2 li.visible{
+    opacity: 1;
+    display: block;
+}
+
+.wrapsubcat2{
+    display: grid;
+    grid-template-columns: auto ;
+    row-gap: 20px;
+    column-gap: 30px;
+}
+
+.chartcontent h1{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.finance{
+    margin: 60px;
+    
+}
+.finance h1{
+    display: flex;
+    justify-content: center;
+   
+}
+
+.ticking-background-up {
+   color: green;
+    animation: ticking 1s linear infinite;
+  }
+
+.ticking-background-down {
+    color: red;
+    animation: ticking 1s linear infinite;
+  }
+  
+  @keyframes ticking {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+  }
+
+  .chartcontent{
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  .guiforcharts{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto;
+
+  }
+
+  .guiforcharts .guiOptions{
+    flex: 0.1;
+  }
+
+  .guiforcharts .sepcharts{
+    padding-left: 40px;
+    padding-right: 40px;
+    width: 100%;
+  }
+
+  .cat2{
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 3px 0px 7px rgba(0,0,0,0.5);
+  }
+
+  .cat2 h2{
+    text-align: center;
+  }
+
+  .cat1{
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 3px 0px 7px rgba(0,0,0,0.5);
+  }
+
+  .cat1 h2{
+    text-align: center;
+  }
+
+  .cat3{
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 3px 0px 7px rgba(0,0,0,0.5);
+  }
+
+  .cat3 h2{
+    text-align: center;
+  }
+
+  .allnews{
+    padding: 40px;
+  }
+
+  .allnews h1{
+    text-align: center;
+  
+  }
+
+  .newslay{
+    margin: 30px;
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 40px;
+    column-gap: 40px;
+  }
+
+  .timedetails{
+    text-align: center;
+    color: gray;
+  }
+
+  .about{
+    padding: 80px;
+  }
+
+  .about h1{
+    text-align: center;
+  }
+
+  .analysis{
+    padding: 80px;
+  }
+
+  .analysis h1{
+    text-align: center;
+  }
+
+  .search form{
+      display: flex;
+  }

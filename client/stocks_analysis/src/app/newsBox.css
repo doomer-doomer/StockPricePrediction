@@ -1,0 +1,48 @@
+.newsBoxLay{
+    padding: 20px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0px 8px 50px 10px rgba(0, 114, 245,0.3);;
+    width: 500px;
+}
+
+.linksec{
+    display: flex;
+    justify-content: space-between;
+}
+
+.newsBoxBox{
+    
+}
+
+.newsBoxImg{
+    border: none;
+    border-radius: 20px;
+    overflow:hidden;
+
+}
+
+.newsDel{
+    display: flex;
+    justify-content: space-between;
+}
+
+.newsDel .s1{
+    align-self: flex-start;
+}
+
+.newsDel .s2{
+    align-self: flex-end;
+}
+
+@media screen and (max-width:420px) {
+
+    .newsBoxLay{
+        padding: 20px;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0px 8px 50px 10px rgba(0, 114, 245,0.3);;
+        width: 350px;
+    }
+    
+  }
