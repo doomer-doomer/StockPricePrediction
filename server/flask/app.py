@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request,send_file
+from flask import Flask,jsonify,request,send_file,Response
 import requests
 from flask_cors import CORS
 import logging
@@ -6,6 +6,8 @@ import json
 import time
 import numpy as np
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -22,6 +24,7 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 import numpy as np
+import gzip
 
 ist_offset = 5.5 * 60 * 60  
 ist_tz = pytz.timezone('Asia/Kolkata')
@@ -868,6 +871,179 @@ def price(script):
     return jsonify({
             "price":x.info['currentPrice'],
         })
+
+data_cache = {}
+CACHE_EXPIRATION_SECONDS = 3600
+
+def check_cache_expiration():
+    current_time = time.time()
+    expired_keys = []
+    for symbol, cache_data in data_cache.items():
+        timestamp = cache_data.get("timestamp", 0)
+        if current_time - timestamp > CACHE_EXPIRATION_SECONDS:
+            expired_keys.append(symbol)
+    for key in expired_keys:
+        data_cache.pop(key)
+
+def process_api(symbols):
+    current_time = time.time()
+    loc_data = {}
+    for symbol in symbols:
+        if symbol in data_cache:
+            loc_data[symbol] = data_cache[symbol]["data"]
+        else:
+            ticker = yf.Ticker(symbol)
+            sector = ticker.info.get('sector', 'N/A')
+            previousClose = ticker.info.get('previousClose', 'N/A')
+            open_price = ticker.info.get('open', 'N/A')
+            dayLow = ticker.info.get('dayLow', 'N/A')
+            dayHigh = ticker.info.get('dayHigh', 'N/A')
+            beta = ticker.info.get('beta', 'N/A')
+            volume = ticker.info.get('volume', 'N/A')
+            exchange = ticker.info.get('exchange', 'N/A')
+            shortName = ticker.info.get('shortName', 'N/A')
+            currentPrice = ticker.info.get('currentPrice', 'N/A')
+            loc_data[symbol] = {
+                "Name":shortName,
+                "Price":currentPrice,
+                "Open":open_price,
+                "High":dayHigh,
+                "Low":dayLow,
+                "Close":previousClose,
+                "Volume":volume,
+                "Beta":beta,
+                "Exchange":exchange,
+                "Sector":sector
+            }
+            data_cache[symbol] = {
+                "data": loc_data[symbol],
+                "timestamp": current_time
+            }
+    check_cache_expiration()
+    return loc_data
+
+#  x = yf.Tickers("ADANIENT.NS ADANIPORTS.NS JSWSTEEL.NS TATAMOTORS.NS SUNPHARMA.NS BAJAJ-AUTO.NS NTPC.NS DRREDDY.NS TITAN.NS LT.NS BPCL.NS INDUSINDBK.NS RELIANCE.NS INFY.NS HDFCBANK.NS SBILIFE.NS BAJFINANCE.NS COALINDIA.NS UPL.NS ITC.NS MARUTI.NS BHARTIARTL.NS BRITANNIA.NS TATASTEEL.NS SBIN.NS ULTRACEMCO.NS HINDALCO.NS ASIANPAINT.NS HDFC.NS GRASIM.NS TCS.NS NESTLEIND.NS AXISBANK.NS DIVISLAB.NS HINDUNILVR.NS ONGC.NS EICHERMOT.NS POWERGRID.NS TATACONSUM.NS ICICIBANK.NS CIPLA.NS HCLTECH.NS WIPRO.NS KOTAKBANK.NS BAJAJFINSV.NS M&M.NS APOLLOHOSP.NS HEROMOTOCO.NS TECHM.NS HDFCLIFE.NS")
+#     a1 = x.tickers["ADANIENT.NS"].info
+
+@app.route("/getAllInfoNSE",methods=["GET"])
+def getAllInfoNSE():
+    csv_file_name = "NSEEquity.csv"
+    df = pd.read_csv(csv_file_name)
+    data = [value+".NS" for value in df.iloc[:, 0]]
+
+    batch_size = 100  # Adjust the batch size as needed
+    data_batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
+
+    with ThreadPoolExecutor() as executor:
+        # Using `submit` to submit the tasks to the executor
+        futures = {executor.submit(process_api, batch) for batch in data_batches}
+
+        # Dictionary to store the results
+        results = {}
+
+        # Extract the results as they become available
+        for future in futures:
+            result = future.result()
+            results.update(result)
+           
+    json_data = json.dumps(results)
+
+    # Compress the JSON data using gzip
+    compressed_data = gzip.compress(json_data.encode('utf-8'))
+
+    # Set the appropriate headers for gzip response
+    response = Response(compressed_data, content_type='application/json')
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Content-Length'] = len(compressed_data)
+    
+    return response
+
+data_cache_BSE = {}
+
+def check_cache_expiration_BSE():
+    current_time = time.time()
+    expired_keys = []
+    for symbol, cache_data in data_cache_BSE.items():
+        timestamp = cache_data.get("timestamp", 0)
+        if current_time - timestamp > CACHE_EXPIRATION_SECONDS:
+            expired_keys.append(symbol)
+    for key in expired_keys:
+        data_cache_BSE.pop(key)
+
+def process_api_BSE(symbols):
+    current_time = time.time()
+    loc_data = {}
+    for symbol in symbols:
+        if symbol in data_cache_BSE:
+            loc_data[symbol] = data_cache_BSE[symbol]["data"]
+        else:
+            ticker = yf.Ticker(symbol)
+            sector = ticker.info.get('sector', 'N/A')
+            previousClose = ticker.info.get('previousClose', 'N/A')
+            open_price = ticker.info.get('open', 'N/A')
+            dayLow = ticker.info.get('dayLow', 'N/A')
+            dayHigh = ticker.info.get('dayHigh', 'N/A')
+            beta = ticker.info.get('beta', 'N/A')
+            volume = ticker.info.get('volume', 'N/A')
+            exchange = ticker.info.get('exchange', 'N/A')
+            shortName = ticker.info.get('shortName', 'N/A')
+            currentPrice = ticker.info.get('currentPrice', 'N/A')
+            loc_data[symbol] = {
+                "Name":shortName,
+                "Price":currentPrice,
+                "Open":open_price,
+                "High":dayHigh,
+                "Low":dayLow,
+                "Close":previousClose,
+                "Volume":volume,
+                "Beta":beta,
+                "Exchange":exchange,
+                "Sector":sector
+            }
+            data_cache_BSE[symbol] = {
+                "data": loc_data[symbol],
+                "timestamp": current_time
+            }
+    check_cache_expiration_BSE()
+    return loc_data
+
+
+@app.route("/getAllInfoBSE",methods=["GET"])
+def getAllInfoBSE():
+    csv_file_name = "Equity.csv"
+    df = pd.read_csv(csv_file_name)
+    data = [value+".BO" for value in df.iloc[:, 1]]
+
+    batch_size = 100  # Adjust the batch size as needed
+    data_batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
+
+    with ThreadPoolExecutor() as executor:
+        # Using `submit` to submit the tasks to the executor
+        futures = {executor.submit(process_api_BSE, batch) for batch in data_batches}
+
+        # Dictionary to store the results
+        results = {}
+
+        # Extract the results as they become available
+        for future in futures:
+            try:
+                result = future.result()
+                results.update(result)
+            except Exception as e:
+                print(f"Error: {str(e)}")
+                
+           
+    json_data = json.dumps(results)
+
+    # Compress the JSON data using gzip
+    compressed_data = gzip.compress(json_data.encode('utf-8'))
+
+    # Set the appropriate headers for gzip response
+    response = Response(compressed_data, content_type='application/json')
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Content-Length'] = len(compressed_data)
+    
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)
