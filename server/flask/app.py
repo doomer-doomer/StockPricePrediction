@@ -927,36 +927,39 @@ def process_api(symbols):
 
 @app.route("/getAllInfoNSE",methods=["GET"])
 def getAllInfoNSE():
-    csv_file_name = "NSEEquity.csv"
-    df = pd.read_csv(csv_file_name)
-    data = [value+".NS" for value in df.iloc[:, 0]]
+    try:
+        csv_file_name = "NSEEquity.csv"
+        df = pd.read_csv(csv_file_name)
+        data = [value+".NS" for value in df.iloc[:, 0]]
 
-    batch_size = 100  # Adjust the batch size as needed
-    data_batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
+        batch_size = 100  # Adjust the batch size as needed
+        data_batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
 
-    with ThreadPoolExecutor() as executor:
-        # Using `submit` to submit the tasks to the executor
-        futures = {executor.submit(process_api, batch) for batch in data_batches}
+        with ThreadPoolExecutor() as executor:
+            # Using `submit` to submit the tasks to the executor
+            futures = {executor.submit(process_api, batch) for batch in data_batches}
 
-        # Dictionary to store the results
-        results = {}
+            # Dictionary to store the results
+            results = {}
 
-        # Extract the results as they become available
-        for future in futures:
-            result = future.result()
-            results.update(result)
-           
-    json_data = json.dumps(results)
+            # Extract the results as they become available
+            for future in futures:
+                result = future.result()
+                results.update(result)
+            
+        json_data = json.dumps(results)
 
-    # Compress the JSON data using gzip
-    compressed_data = gzip.compress(json_data.encode('utf-8'))
+        # Compress the JSON data using gzip
+        compressed_data = gzip.compress(json_data.encode('utf-8'))
 
-    # Set the appropriate headers for gzip response
-    response = Response(compressed_data, content_type='application/json')
-    response.headers['Content-Encoding'] = 'gzip'
-    response.headers['Content-Length'] = len(compressed_data)
-    
-    return response
+        # Set the appropriate headers for gzip response
+        response = Response(compressed_data, content_type='application/json')
+        response.headers['Content-Encoding'] = 'gzip'
+        response.headers['Content-Length'] = len(compressed_data)
+        
+        return response
+    except Exception as e:
+        return str(e), 500 
 
 data_cache_BSE = {}
 
@@ -1010,40 +1013,43 @@ def process_api_BSE(symbols):
 
 @app.route("/getAllInfoBSE",methods=["GET"])
 def getAllInfoBSE():
-    csv_file_name = "Equity.csv"
-    df = pd.read_csv(csv_file_name)
-    data = [value+".BO" for value in df.iloc[:, 1]]
+    try:
+        csv_file_name = "Equity.csv"
+        df = pd.read_csv(csv_file_name)
+        data = [value+".BO" for value in df.iloc[:, 1]]
 
-    batch_size = 100  # Adjust the batch size as needed
-    data_batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
+        batch_size = 100  # Adjust the batch size as needed
+        data_batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
 
-    with ThreadPoolExecutor() as executor:
-        # Using `submit` to submit the tasks to the executor
-        futures = {executor.submit(process_api_BSE, batch) for batch in data_batches}
+        with ThreadPoolExecutor() as executor:
+            # Using `submit` to submit the tasks to the executor
+            futures = {executor.submit(process_api_BSE, batch) for batch in data_batches}
 
-        # Dictionary to store the results
-        results = {}
+            # Dictionary to store the results
+            results = {}
 
-        # Extract the results as they become available
-        for future in futures:
-            try:
-                result = future.result()
-                results.update(result)
-            except Exception as e:
-                print(f"Error: {str(e)}")
-                
-           
-    json_data = json.dumps(results)
+            # Extract the results as they become available
+            for future in futures:
+                try:
+                    result = future.result()
+                    results.update(result)
+                except Exception as e:
+                    print(f"Error: {str(e)}")
+                    
+            
+        json_data = json.dumps(results)
 
-    # Compress the JSON data using gzip
-    compressed_data = gzip.compress(json_data.encode('utf-8'))
+        # Compress the JSON data using gzip
+        compressed_data = gzip.compress(json_data.encode('utf-8'))
 
-    # Set the appropriate headers for gzip response
-    response = Response(compressed_data, content_type='application/json')
-    response.headers['Content-Encoding'] = 'gzip'
-    response.headers['Content-Length'] = len(compressed_data)
-    
-    return response
+        # Set the appropriate headers for gzip response
+        response = Response(compressed_data, content_type='application/json')
+        response.headers['Content-Encoding'] = 'gzip'
+        response.headers['Content-Length'] = len(compressed_data)
+        
+        return response
+    except Exception as e:
+        return str(e), 500 
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -887,6 +887,14 @@ const [secOss,setsecOss] = useState("macd")
         // getShortChartData(pathname.slice(14,),"1mo","15m")
         // getShortChartData(pathname.slice(14,),"3mo","30m")
         setcandlestick(candlestick)
+        if(localStorage.getItem("theme")==="true"){
+          setIsDark(true)
+        }else if(localStorage.getItem("theme")==="false"){
+          setIsDark(false)
+        }else{
+          return
+        }
+  
         if(isDark){
           setcandlestick(
              {...testcandlestick,
@@ -1170,9 +1178,6 @@ const [secOss,setsecOss] = useState("macd")
 
                <Dropdown.Item
                  
-                 // icon={
-                 //   <AddNoteIcon size={22} fill="var(--nextui-colors-primary)" />
-                 // }
                >
                  
                  <Button 
@@ -1190,19 +1195,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "priceenvelopes" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("priceenvelopes")
                 }}
@@ -1213,19 +1206,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "psar" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("psar")
                 }}
@@ -1236,19 +1217,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "linearRegression" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("linearRegression")
                 }}
@@ -1259,19 +1228,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "supertrend" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("supertrend")
                 }}
@@ -1282,19 +1239,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "vwap" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("vwap")
                 }}
@@ -1305,19 +1250,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "wma" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("wma")
                 }}
@@ -1328,19 +1261,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "zigzag" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("zigzag")
                 }}
@@ -1367,196 +1288,262 @@ const [secOss,setsecOss] = useState("macd")
                   css={{ $$dropdownMenuWidth: "280px" }}
                 >
                   <Dropdown.Section title="Primary" css={buttonStyle}>
-                    <Dropdown.Item
-                    
-                      // icon={
-                      //   <AddNoteIcon size={22} fill="var(--nextui-colors-primary)" />
-                      // }
-                    >
-                      
-                      <Button 
-                      light color="default" auto
-            
-                      onClick={abc=>{
-                        setcandlestick((prevState) => {
-                          const updatedSeries = prevState.series.map((obj, i) => {
-                            if (i === 0) {
-                              return { ...obj, data: [...separatechart.map(obj=>
-                                [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                              ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                              color:"lightgreen",
-                              upColor:"red",
-                              type:"candlestick",
-                          };
-                            }
-                            return obj;
-                          });
-                      
-                          return { ...prevState, series: updatedSeries };
-                        });
-                        
-                      }}
-                      >Candlestick</Button>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                    >
-                      <Button 
-                      light color="default" auto
-                      onClick={abc=>{//test.current.chart.update(hollowcandlestick,true)
-                        //test.current.chart.redraw()
-                        setcandlestick((prevState) => {
-                          const updatedSeries = prevState.series.map((obj, i) => {
-                            if (i === 0) {
-                              return { ...obj, data: [...separatechart.map(obj=>
-                                [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                              ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]],
-                              color:"lightblue",
-                              upColor:"white",
-                              type:"candlestick",
-                            };
-                            }
-                            return obj;
-                          });
-                      
-                          return { ...prevState, series: updatedSeries };
-                        });
-                        }}>Hollow Candlestick</Button>
-                      
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      
-                      // icon={
-                      //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                      // }
-                    >
-                      
-                      <Button 
-                      light color="default" auto
-                      onClick={abc=>{//test.current.chart.update(heikenashi,true)
-                        setcandlestick((prevState) => {
-                          const updatedSeries = prevState.series.map((obj, i) => {
-                            if (i === 0) {
-                              return { ...obj,data: [...heikinAshiData , [new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]],
-                              color:"lightgreen",
-                              upColor:"red",
-                              type:"candlestick",
-                            };
-                            }
-                            return obj;
-                          });
-                      
-                          return { ...prevState, series: updatedSeries };
-                        });
-                      }}>Heikenashi</Button>
-                    </Dropdown.Item>
+                  <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("apo")
+                }}
+                  >Absolute Price Oscillation</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("ad")
+                }}
+                  >A/D (Accumulation/Distribution)</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("aroon")
+                }}
+                  >Aroon</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("ao")
+                }}
+                  >Awesome Oscillator</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("rsi")
+                }}
+                  >RSI</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("aroonoscillator")
+                }}
+                  >Aroon Oscillator</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("atr")
+                }}
+                  >Avg True Range</Button>
+               </Dropdown.Item>
+
                     </Dropdown.Section>
 
+
+
+
                     <Dropdown.Section title="Secondary">
-                    <Dropdown.Item
+                    <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("cci")
+                }}
+                  >Commodity Channel Index</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("chaikin")
+                }}
+                  >Chiakin</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("mfi")
+                }}
+                  >Money Flow Index</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("momentum")
+                }}
+                  >Momentum</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("stochastic")
+                }}
+                  >Stochastic</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("macd")
+                }}
+                  >MACD</Button>
+               </Dropdown.Item>
+               
                     
-                    // icon={
-                    //   <AddNoteIcon size={22} fill="var(--nextui-colors-primary)" />
-                    // }
-                  >
-                    
-                    <Button 
-                    light color="default" auto
-                    onClick={abc=>{
-                      //setnewchart(candlestick) 
-                    
-                      setcandlestick((prevState) => {
-                        const updatedSeries = prevState.series.map((obj, i) => {
-                          if (i === 0) {
-                            return { ...obj, data: [...separatechart.map(obj=>
-                              [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                            ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                            color:"#6A0DAD",
-                            type:"areaspline",
-                            fillColor: {
-                              linearGradient: {
-                                  x1: 0,
-                                  y1: 0,
-                                  x2: 0,
-                                  y2: 1
-                              },
-                              stops: [
-                                  [0, "#6A0DAD"],
-                                  [1, "ABA9AD"]
-                              ]
-                            }
-                          }
-                          }
-                          return obj;
-                        });
-                    
-                        return { ...prevState, series: updatedSeries };
-                      });
-                      //test.current.chart.update(candlestick("sma","macd","stochastic"),true)
-                      //test.current.chart.redraw()
-                    }}>Area</Button>
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                  >
-                    <Button 
-                    light color="default" auto
-                    onClick={abc=>{
-                      //setnewchart(candlestick) 
-                    
-                      setcandlestick((prevState) => {
-                        const updatedSeries = prevState.series.map((obj, i) => {
-                          if (i === 0) {
-                            return { ...obj, data: [...separatechart.map(obj=>
-                              [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                            ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                            color:"lightgreen",
-                            upColor:"red",
-                            type:"ohlc",
-                            
-                        };
-                          }
-                          return obj;
-                        });
-                    
-                        return { ...prevState, series: updatedSeries };
-                      });
-                      
-                    }}>OHLC</Button>
-                    
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    
-                    // icon={
-                    //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                    // }
-                  >
-                    
-                    <Button 
-                    light color="default" auto
-                    onClick={abc=>{
-                      //setnewchart(candlestick) 
-                    
-                      setcandlestick((prevState) => {
-                        const updatedSeries = prevState.series.map((obj, i) => {
-                          if (i === 0) {
-                            return { ...obj, data: [...separatechart.map(obj=>
-                              [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                            ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                            color:"lightgreen",
-                            upColor:"red",
-                            type:"spline",
-                            
-                        };
-                          }
-                          return obj;
-                        });
-                    
-                        return { ...prevState, series: updatedSeries };
-                      });
-                      
-                    }}>Spline</Button>
-                  </Dropdown.Item>
                     </Dropdown.Section>
                 
+                </Dropdown.Menu>
+              </Dropdown>
+          </Navbar.Item>
+
+          <Navbar.Item>
+
+          <Dropdown >
+                <Dropdown.Button light color="default" >
+                 Time Interval
+                </Dropdown.Button>
+                <Dropdown.Menu
+                  color="default"
+                  aria-label="Actions"
+                  css={{ $$dropdownMenuWidth: "280px" }}
+                >
+                  
+                  <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"7d","1m")
+                }}
+                  >1m</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"7d","2m")
+                }}
+                  >2m</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"1mo","5m")
+                }}
+                  >5m</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"1mo","15m")
+                }}
+                  >15m</Button>
+               </Dropdown.Item>
+
+        
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"6mo","1h")
+                }}
+                  >1hr</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","1d")
+                }}
+                  >1D</Button>
+               </Dropdown.Item>
+
+                    
+                    <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","1wk")
+                }}
+                  >1W</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","1mo")
+                }}
+                  >1M</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","3mo")
+                }}
+                  >3M</Button>
+               </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
           </Navbar.Item>
@@ -1576,11 +1563,16 @@ const [secOss,setsecOss] = useState("macd")
           
           <Navbar.Item>
           <Switch
-          checked={true}
-          onChange={(e) => {
-            testsetTheme(e.target.checked ? setIsDark(false) : setIsDark(true))
-            
-          }}
+          checked={!isDark}
+          onChange={(e) => testsetTheme(e.target.checked ? 
+            abc=>
+            {setIsDark(false)
+              localStorage.setItem("theme",false)
+            } : 
+            abc=>
+            {setIsDark(true)
+              localStorage.setItem("theme",true)
+            })}
           size="xl"
           iconOn={<SunIcon filled />}
           iconOff={<MoonIcon filled />}
@@ -1592,7 +1584,6 @@ const [secOss,setsecOss] = useState("macd")
         }}>
         <Navbar.CollapseItem>
         
-          
           <Dropdown >
             <Dropdown.Button light color="default" auto >
               Chart Type
@@ -1682,28 +1673,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-                //   //setnewchart(candlestick) 
-                 
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 0) {
-                //         return { ...obj, data: [...separatechart.map(obj=>
-                //           [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                //         ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                //         color:"lightgreen",
-                //         upColor:"red",
-                //         type:"spline",
-                        
-                //     };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                  
-                // }}
                 onClick={abc=>{
                   setChartMainType("spline")
                 }}
@@ -1729,28 +1699,11 @@ const [secOss,setsecOss] = useState("macd")
             >
               <Dropdown.Section title="Primary" css={buttonStyle}>
                 <Dropdown.Item
-                 
-                  // icon={
-                  //   <AddNoteIcon size={22} fill="var(--nextui-colors-primary)" />
-                  // }
+            
                 >
                   
                   <Button 
                   light color="default" auto
-        
-                  // onClick={abc=>{
-              
-                  //   setcandlestick((prevState) => {
-                  //     const updatedSeries = prevState.series.map((obj, i) => {
-                  //       if (i === 2) {
-                  //         return { ...obj, type: "pc" };
-                  //       }
-                  //       return obj;
-                  //     });
-                  
-                  //     return { ...prevState, series: updatedSeries };
-                  //   });
-                  //   }}
                   onClick={abc=>{
                     firstsetOverlay("pc")
                   }}
@@ -1760,19 +1713,6 @@ const [secOss,setsecOss] = useState("macd")
                 >
                   <Button 
                   light color="default" auto
-                  // onClick={abc=>{
-              
-                  //   setcandlestick((prevState) => {
-                  //     const updatedSeries = prevState.series.map((obj, i) => {
-                  //       if (i === 2) {
-                  //         return { ...obj, type: "ema" };
-                  //       }
-                  //       return obj;
-                  //     });
-                  
-                  //     return { ...prevState, series: updatedSeries };
-                  //   });
-                  //   }}
                   onClick={abc=>{
                     firstsetOverlay("ema")
                   }}
@@ -1780,28 +1720,12 @@ const [secOss,setsecOss] = useState("macd")
                   
                 </Dropdown.Item>
                 <Dropdown.Item
-                  
-                  // icon={
-                  //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                  // }
+    
                 >
                   
                   <Button 
                   light color="default" auto
-                  // onClick={abc=>{
-              
-                  //   setcandlestick((prevState) => {
-                  //     const updatedSeries = prevState.series.map((obj, i) => {
-                  //       if (i === 2) {
-                  //         return { ...obj, type: "tema" };
-                  //       }
-                  //       return obj;
-                  //     });
-                  
-                  //     return { ...prevState, series: updatedSeries };
-                  //   });
-
-                    //}}
+  
                     onClick={abc=>{
                       firstsetOverlay("tema")
                     }}
@@ -1811,27 +1735,12 @@ const [secOss,setsecOss] = useState("macd")
 
                 
                 <Dropdown.Item
-                 
-                 // icon={
-                 //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                 // }
+        
                >
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "sma" };
-                //       }
-                //       return obj;
-                //     });
-                
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
+      
                 onClick={abc=>{
                   firstsetOverlay("sma")
                 }}
@@ -1841,19 +1750,7 @@ const [secOss,setsecOss] = useState("macd")
                >
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "dema" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("dema")
                 }}
@@ -1861,27 +1758,12 @@ const [secOss,setsecOss] = useState("macd")
                  
                </Dropdown.Item>
                <Dropdown.Item
-                 
-                 // icon={
-                 //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                 // }
+               
                >
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "bb" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("bb")
                 }}
@@ -1889,27 +1771,12 @@ const [secOss,setsecOss] = useState("macd")
                </Dropdown.Item>
 
                <Dropdown.Item
-                 
-                 // icon={
-                 //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                 // }
+              
                >
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                  // setcandlestick((prevState) => {
-                  //   const updatedSeries = prevState.series.map((obj, i) => {
-                  //     if (i === 2) {
-                  //       return { ...obj, type: "vbp" };
-                  //     }
-                  //     return obj;
-                  //   });
-                
-                  //   return { ...prevState, series: updatedSeries };
-                  // });
-                  // }}
+               
                   onClick={abc=>{
                     firstsetOverlay("vbp")
                   }}
@@ -1917,27 +1784,12 @@ const [secOss,setsecOss] = useState("macd")
                </Dropdown.Item>
 
                <Dropdown.Item
-                 
-                 // icon={
-                 //   <AddNoteIcon size={22} fill="var(--nextui-colors-default)" />
-                 // }
+              
                >
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "priceenvelopes" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("priceenvelopes")
                 }}
@@ -1948,19 +1800,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "psar" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("psar")
                 }}
@@ -1971,19 +1811,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "linearRegression" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("linearRegression")
                 }}
@@ -1994,19 +1822,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "supertrend" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("supertrend")
                 }}
@@ -2017,19 +1833,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "vwap" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("vwap")
                 }}
@@ -2040,19 +1844,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "wma" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("wma")
                 }}
@@ -2063,19 +1855,7 @@ const [secOss,setsecOss] = useState("macd")
                  
                  <Button 
                  light color="default" auto
-                //  onClick={abc=>{
-              
-                //   setcandlestick((prevState) => {
-                //     const updatedSeries = prevState.series.map((obj, i) => {
-                //       if (i === 2) {
-                //         return { ...obj, type: "zigzag" };
-                //       }
-                //       return obj;
-                //     });
                 
-                //     return { ...prevState, series: updatedSeries };
-                //   });
-                //   }}
                 onClick={abc=>{
                   firstsetOverlay("zigzag")
                 }}
@@ -2087,9 +1867,280 @@ const [secOss,setsecOss] = useState("macd")
              
             </Dropdown.Menu>
           </Dropdown>
+          </Navbar.CollapseItem>
+
+          <Navbar.CollapseItem>
+          <Dropdown >
+                <Dropdown.Button light color="default" >
+                 Oscillations Indicators
+                </Dropdown.Button>
+                <Dropdown.Menu
+                  color="default"
+                  aria-label="Actions"
+                  css={{ $$dropdownMenuWidth: "280px" }}
+                >
+                  <Dropdown.Section title="Primary" css={buttonStyle}>
+                  <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("apo")
+                }}
+                  >Absolute Price Oscillation</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("ad")
+                }}
+                  >A/D (Accumulation/Distribution)</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("aroon")
+                }}
+                  >Aroon</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("ao")
+                }}
+                  >Awesome Oscillator</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("rsi")
+                }}
+                  >RSI</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("aroonoscillator")
+                }}
+                  >Aroon Oscillator</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setfirstOss("atr")
+                }}
+                  >Avg True Range</Button>
+               </Dropdown.Item>
+
+                    </Dropdown.Section>
+
+
+
+
+                    <Dropdown.Section title="Secondary">
+                    <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("cci")
+                }}
+                  >Commodity Channel Index</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("chaikin")
+                }}
+                  >Chiakin</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("mfi")
+                }}
+                  >Money Flow Index</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("momentum")
+                }}
+                  >Momentum</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("stochastic")
+                }}
+                  >Stochastic</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={abc=>{
+                  setsecOss("macd")
+                }}
+                  >MACD</Button>
+               </Dropdown.Item>
+               
+                    
+                    </Dropdown.Section>
+                
+                </Dropdown.Menu>
+              </Dropdown>
+
+</Navbar.CollapseItem>
+<Navbar.CollapseItem>
+          <Dropdown >
+                <Dropdown.Button light color="default" >
+                 Time Interval
+                </Dropdown.Button>
+                <Dropdown.Menu
+                  color="default"
+                  aria-label="Actions"
+                  css={{ $$dropdownMenuWidth: "280px" }}
+                >
+                  
+                  <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"7d","1m")
+                }}
+                  >1m</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"7d","2m")
+                }}
+                  >2m</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"1mo","5m")
+                }}
+                  >5m</Button>
+               </Dropdown.Item>
+
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"1mo","15m")
+                }}
+                  >15m</Button>
+               </Dropdown.Item>
+
+        
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getShortChartData(pathname.slice(14,),"6mo","1h")
+                }}
+                  >1hr</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","1d")
+                }}
+                  >1D</Button>
+               </Dropdown.Item>
+
+                    
+                    <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","1wk")
+                }}
+                  >1W</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","1mo")
+                }}
+                  >1M</Button>
+               </Dropdown.Item>
+               <Dropdown.Item>
+                 
+                 <Button 
+                 light color="default" auto
+                
+                 onClick={async abc=>{
+                  await getChartData(pathname.slice(14,),"max","3mo")
+                }}
+                  >3M</Button>
+               </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              </Navbar.CollapseItem>
          
        
-        </Navbar.CollapseItem>
+        
       </Navbar.Collapse>
       </Navbar>
          
@@ -2097,353 +2148,7 @@ const [secOss,setsecOss] = useState("macd")
               
           <div className='guiOptions'>
           
-          {/* <Dropdown onClick={abc=>{setload(true) }}>
-              <Dropdown.Toggle variant="light" id="dropdown-basic">
-                <Image src={candle} width="25" height={25}></Image>
-                Chart Type
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu >
-                <Dropdown.Item onClick={abc=>{
-                  //setnewchart(candlestick) 
-                 
-                  setcandlestick((prevState) => {
-                    const updatedSeries = prevState.series.map((obj, i) => {
-                      if (i === 0) {
-                        return { ...obj, data: [...separatechart.map(obj=>
-                          [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                        ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                        color:"lightgreen",
-                        upColor:"red",
-                        type:"candlestick",
-                    };
-                      }
-                      return obj;
-                    });
-                
-                    return { ...prevState, series: updatedSeries };
-                  });
-                  //test.current.chart.update(candlestick("sma","macd","stochastic"),true)
-                  //test.current.chart.redraw()
-                }}>Candlestick</Dropdown.Item>
-                <Dropdown.Item onClick={abc=>{//test.current.chart.update(hollowcandlestick,true)
-                //test.current.chart.redraw()
-                setcandlestick((prevState) => {
-                  const updatedSeries = prevState.series.map((obj, i) => {
-                    if (i === 0) {
-                      return { ...obj, data: [...separatechart.map(obj=>
-                        [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                      ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]],
-                       color:"lightblue",
-                       upColor:"white",
-                       type:"candlestick",
-                    };
-                    }
-                    return obj;
-                  });
-              
-                  return { ...prevState, series: updatedSeries };
-                });
-                }}>Hollow Candlestick</Dropdown.Item>
-                <Dropdown.Item onClick={abc=>{//test.current.chart.update(heikenashi,true)
-                setcandlestick((prevState) => {
-                  const updatedSeries = prevState.series.map((obj, i) => {
-                    if (i === 0) {
-                      return { ...obj,data: [...heikinAshiData , [new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]],
-                       color:"lightgreen",
-                       upColor:"red",
-                       type:"candlestick",
-                    };
-                    }
-                    return obj;
-                  });
-              
-                  return { ...prevState, series: updatedSeries };
-                });
-               }}>Heikenashi</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-                  //setnewchart(candlestick) 
-                 
-                  setcandlestick((prevState) => {
-                    const updatedSeries = prevState.series.map((obj, i) => {
-                      if (i === 0) {
-                        return { ...obj, data: [...separatechart.map(obj=>
-                          [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                        ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                        color:"#6A0DAD",
-                        type:"areaspline",
-                        fillColor: {
-                          linearGradient: {
-                              x1: 0,
-                              y1: 0,
-                              x2: 0,
-                              y2: 1
-                          },
-                          stops: [
-                              [0, "#6A0DAD"],
-                              [1, "ABA9AD"]
-                          ]
-                        }
-                      }
-                      }
-                      return obj;
-                    });
-                
-                    return { ...prevState, series: updatedSeries };
-                  });
-                  //test.current.chart.update(candlestick("sma","macd","stochastic"),true)
-                  //test.current.chart.redraw()
-                }}>Area</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-                  //setnewchart(candlestick) 
-                 
-                  setcandlestick((prevState) => {
-                    const updatedSeries = prevState.series.map((obj, i) => {
-                      if (i === 0) {
-                        return { ...obj, data: [...separatechart.map(obj=>
-                          [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                        ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                        color:"lightgreen",
-                        upColor:"red",
-                        type:"ohlc",
-                        
-                    };
-                      }
-                      return obj;
-                    });
-                
-                    return { ...prevState, series: updatedSeries };
-                  });
-                  
-                }}>OHLC</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-                  //setnewchart(candlestick) 
-                 
-                  setcandlestick((prevState) => {
-                    const updatedSeries = prevState.series.map((obj, i) => {
-                      if (i === 0) {
-                        return { ...obj, data: [...separatechart.map(obj=>
-                          [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-                        ),[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]], 
-                        color:"lightgreen",
-                        upColor:"red",
-                        type:"spline",
-                        
-                    };
-                      }
-                      return obj;
-                    });
-                
-                    return { ...prevState, series: updatedSeries };
-                  });
-                  
-                }}>Spline</Dropdown.Item>
-              </Dropdown.Menu>
-         </Dropdown>
-
-         
-          
-          <Dropdown onClick={abc=>setload(true)}>
-              <Dropdown.Toggle variant="light" id="dropdown-basic">
-              <Image src={indicator} width="25" height={25}></Image>
-              Overlay Indicators
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={abc=>{
-              
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "pc" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>PC Bands</Dropdown.Item>
-                <Dropdown.Item onClick={abc=>{
-                
-                setcandlestick((prevState) => {
-                  const updatedSeries = prevState.series.map((obj, i) => {
-                    if (i === 2) {
-                      return { ...obj, type: "sma" };
-                    }
-                    return obj;
-                  });
-              
-                  return { ...prevState, series: updatedSeries };
-                });
-              }}>SMA</Dropdown.Item>
-                <Dropdown.Item onClick={abc=>{
-              
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "ema" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>EMA else</Dropdown.Item>
-                <Dropdown.Item onClick={abc=>{
-              
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "tema" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>TEMA Bands</Dropdown.Item>
-               
-                <Dropdown.Item onClick={abc=>{
-              
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "dema" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>DEMA</Dropdown.Item>
-                
-                <Dropdown.Item onClick={abc=>{
-              
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "bb" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Bollinger Band</Dropdown.Item>
-
-              <Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "vbp" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Volume by Price(Vbp)</Dropdown.Item>
-
-              <Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "priceenvelopes" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Price Envelopes</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "supertrend" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Supertrend</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "psar" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Parabolic SAR</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "linearRegression" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Linear Regression</Dropdown.Item>
-
-<Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "vwap" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Volume Weighted Avg Price (VWAP)</Dropdown.Item>
-
-
-<Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "wma" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Weighted Avg Price (VWA)</Dropdown.Item>
-
-
-<Dropdown.Item onClick={abc=>{
-              setcandlestick((prevState) => {
-                const updatedSeries = prevState.series.map((obj, i) => {
-                  if (i === 2) {
-                    return { ...obj, type: "zigzag" };
-                  }
-                  return obj;
-                });
-            
-                return { ...prevState, series: updatedSeries };
-              });
-              }}>Zig Zag</Dropdown.Item>
-
-
-              </Dropdown.Menu>
-         </Dropdown>
-
+          {/* 
          <Dropdown onClick={abc=>setload(true)}>
               <Dropdown.Toggle variant="light" id="dropdown-basic">
               <Image src={osindi} width="25" height={25}></Image>

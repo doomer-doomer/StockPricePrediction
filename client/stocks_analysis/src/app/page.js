@@ -80,6 +80,8 @@ export default function Home() {
   const [privateBankData,setprivateBankData] = useState([])
   const [realtyData,setrealtyData] = useState([])
 
+  const [NSEData,setNSEData] = useState([])
+
   const [bNews,setbusinessNews]=useState([])
 
   const router = useRouter();
@@ -677,6 +679,23 @@ const businessNews = async()=>{
   });
  }
 
+ const allNSEData = async()=>{
+  await fetch("http://localhost:5000/getAllInfoNSE",{method:"GET"})
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Request failed:', response.status);
+    }
+  })
+  .then(data => {
+    setNSEData(data)
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+ }
+
 
  //console.log(nifty50Data)
 //  const getX = nifty50.find(obj=>obj.TATAMOTORS)?.TATAMOTORS
@@ -753,6 +772,12 @@ const logout = () =>{
   >
     <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
       <div>
+        <div className="scrolling-line-container">
+          <div className="scrolling-line">
+            {/* {scrollingText} */}
+            <p>To be completed</p>
+          </div>
+        </div>
       <Navbar shouldHideOnScroll isBordered variant={"static"} css={{width:"100%", backgroundColor:"$background"}}>
       <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
         <Navbar.Brand>
