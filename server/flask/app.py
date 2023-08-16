@@ -903,6 +903,12 @@ def process_api(symbols):
             exchange = ticker.info.get('exchange', 'N/A')
             shortName = ticker.info.get('shortName', 'N/A')
             currentPrice = ticker.info.get('currentPrice', 'N/A')
+            marketCap = ticker.info.get('marketCap','N/A')
+            forwardPE = ticker.info.get('forwardPE','N/A')
+            forwardEps = ticker.info.get('forwardEps','N/A')
+            totalRevenue = ticker.info.get('totalRevenue','N/A')
+            trailingEps = ticker.info.get('trailingEps','N/A')
+            trailingPE = ticker.info.get('trailingPE','N/A')
             loc_data[symbol] = {
                 "Name":shortName,
                 "Price":currentPrice,
@@ -913,7 +919,13 @@ def process_api(symbols):
                 "Volume":volume,
                 "Beta":beta,
                 "Exchange":exchange,
-                "Sector":sector
+                "Sector":sector,
+                "Cap":marketCap,
+                "forwardPE":forwardPE,
+                "forwardEps":forwardEps,
+                "totalRevenue":totalRevenue,
+                "trailingEps":trailingEps,
+                "trailingPE":trailingPE
             }
             data_cache[symbol] = {
                 "data": loc_data[symbol],
@@ -944,8 +956,11 @@ def getAllInfoNSE():
 
             # Extract the results as they become available
             for future in futures:
-                result = future.result()
-                results.update(result)
+                try:
+                    result = future.result()
+                    results.update(result)
+                except Exception as e:
+                    print(f"Error in processing batch: {e}")
             
         json_data = json.dumps(results)
 
@@ -991,6 +1006,12 @@ def process_api_BSE(symbols):
             exchange = ticker.info.get('exchange', 'N/A')
             shortName = ticker.info.get('shortName', 'N/A')
             currentPrice = ticker.info.get('currentPrice', 'N/A')
+            marketCap = ticker.info.get('marketCap','N/A')
+            forwardPE = ticker.info.get('forwardPE','N/A')
+            forwardEps = ticker.info.get('forwardEps','N/A')
+            totalRevenue = ticker.info.get('totalRevenue','N/A')
+            trailingEps = ticker.info.get('trailingEps','N/A')
+            trailingPE = ticker.info.get('trailingPE','N/A')
             loc_data[symbol] = {
                 "Name":shortName,
                 "Price":currentPrice,
@@ -1001,7 +1022,13 @@ def process_api_BSE(symbols):
                 "Volume":volume,
                 "Beta":beta,
                 "Exchange":exchange,
-                "Sector":sector
+                "Sector":sector,
+                "Cap":marketCap,
+                "forwardPE":forwardPE,
+                "forwardEps":forwardEps,
+                "totalRevenue":totalRevenue,
+                "trailingEps":trailingEps,
+                "trailingPE":trailingPE
             }
             data_cache_BSE[symbol] = {
                 "data": loc_data[symbol],
