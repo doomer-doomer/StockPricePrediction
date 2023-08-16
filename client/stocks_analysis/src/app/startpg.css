@@ -190,22 +190,68 @@
   }
 
   .scrolling-line-container {
-    text-align: center;
+    text-align: end;
     width: 100%;
     height: 30px;
     color: black;
-    background-color: transparent;
     overflow: hidden;
     position: absolute;
     top: 0;
     margin-top: 80px;
     z-index: 9999;
+    opacity: 0; /* Start with opacity set to 0 */
+    animation: fadeInOut 70s ease-in-out infinite;
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+    backdrop-filter: blur(10px);
   }
   
   .scrolling-line {
     display: inline-block;
     white-space: nowrap;
-    animation: scrollText 10s linear infinite;
+    animation: scrollText 70s linear infinite;
+  }
+
+  .scrolling-align{
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .scrolling-line-container2 {
+    text-align: end;
+    width: 100%;
+    height: 30px;
+    color: black;
+    
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    margin-top: 115px;
+    z-index: 9999;
+    opacity: 0; /* Start with opacity set to 0 */
+    animation: fadeInOut 70s ease-in-out infinite;
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+    backdrop-filter: blur(10px);
+  }
+  
+  .scrolling-line2 {
+    display: inline-block;
+    white-space: nowrap;
+    animation: scrollText2 70s linear infinite;
+  }
+
+  .scrolling-align2{
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
   
   .api-data-container {
@@ -216,13 +262,30 @@
   
   @keyframes scrollText {
     0% {
-      transform: translateX(100%);
+      transform: translateX(25%);
     }
     100% {
       transform: translateX(-100%);
     }
   }
 
+  @keyframes scrollText2 {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(25%);
+    }
+  }
+
+  @keyframes fadeInOut {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
   @media screen and (max-width:1400px) {
     .buisnessNews{
         padding: 60px;

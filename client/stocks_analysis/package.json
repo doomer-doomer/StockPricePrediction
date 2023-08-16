@@ -25,6 +25,7 @@
     "chart.js": "^4.3.0",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
+    "heap": "^0.2.7",
     "highcharts": "^11.0.1",
     "highcharts-export-data": "^0.1.7",
     "highcharts-exporting": "^0.1.7",

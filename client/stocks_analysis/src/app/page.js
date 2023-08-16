@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Head from './head';
 import Link from 'next/link';
 import './startpg.css'
+import Image from 'next/image';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import sand from 'highcharts/themes/sand-signika';
@@ -17,7 +18,8 @@ import { styled } from '@mui/material/styles';
 import { Avatar } from '@nextui-org/react';
 
 import { Navbar, Button, Text, Card, Radio, theme,Container, Row } from "@nextui-org/react";
-
+import Up from '../app/arrow-up.png'
+import Down from '../app/down.png'
 
 import CollapsibleTable from './table';
 import stock from './stock';
@@ -41,6 +43,8 @@ import { Skeleton } from '@mui/material';
 import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
 import BusinessNewsBox from './newsBox';
 import nopic from '../app/nopic.png'
+
+import Heap from 'heap';
 
 const lightTheme = createTheme({
   type: 'light',
@@ -81,6 +85,8 @@ export default function Home() {
   const [realtyData,setrealtyData] = useState([])
 
   const [NSEData,setNSEData] = useState([])
+  const [BSEData,setBSEData] = useState([])
+  const [AllIndex,setAllIndex]=useState(NSEData.concat(BSEData))
 
   const [bNews,setbusinessNews]=useState([])
 
@@ -679,7 +685,32 @@ const businessNews = async()=>{
   });
  }
 
- const allNSEData = async()=>{
+
+ function findHighestProfits(data, k) {
+  const maxHeap = new Heap((a, b) => b.profitDifference - a.profitDifference);
+
+  for (let i = 0; i < data.length; i++) {
+    for (let j = i + 1; j < data.length; j++) {
+      const profitDiff = data[j].profit - data[i].profit;
+      const comparison = {
+        stock1: data[i].symbol,
+        stock2: data[j].symbol,
+        profitDifference: profitDiff
+      };
+
+      if (maxHeap.size() < k) {
+        maxHeap.push(comparison);
+      } else if (profitDiff > maxHeap.peek().profitDifference) {
+        maxHeap.pop();
+        maxHeap.push(comparison);
+      }
+    }
+  }
+
+  return maxHeap.toArray();
+}
+
+const allNSEData = async()=>{
   await fetch("http://localhost:5000/getAllInfoNSE",{method:"GET"})
   .then(response => {
     if (response.ok) {
@@ -689,7 +720,84 @@ const businessNews = async()=>{
     }
   })
   .then(data => {
-    setNSEData(data)
+    const mappedData = Object.keys(data).map(stockSymbol => {
+      const stockData = data[stockSymbol];
+      return {
+        symbol: stockSymbol,
+        name: stockData.Name,
+        price: stockData.Price,
+        open: stockData.Open,
+        high: stockData.High,
+        low: stockData.Low,
+        close: stockData.Close,
+        volume: stockData.Volume,
+        beta: stockData.Beta,
+        exchange: stockData.Exchange,
+        sector: stockData.Sector
+      };
+    });
+    mappedData.forEach(stock => {
+      stock.profit = stock.close - stock.price;
+    });
+    const losers = mappedData.filter(stock => stock.profit < 0);
+    const gainers = mappedData.filter(stock => stock.profit >= 0);
+    losers.sort((a, b) => a.profit - b.profit);
+    gainers.sort((a, b) => b.profit - a.profit);
+    const top10Losers = losers.slice(0, 10);
+    const top10Gainers = gainers.slice(0, 10);
+    const mergedData = top10Gainers.concat(top10Losers);
+    
+    console.log("Top 10 Highest Profit Stocks:");
+    console.log(gainers);
+    setNSEData(mergedData)
+    
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+ }
+
+ const allBSEData = async()=>{
+  await fetch("http://localhost:5000/getAllInfoBSE",{method:"GET"})
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Request failed:', response.status);
+    }
+  })
+  .then(data => {
+    const mappedData = Object.keys(data).map(stockSymbol => {
+      const stockData = data[stockSymbol];
+      return {
+        symbol: stockSymbol,
+        name: stockData.Name,
+        price: stockData.Price,
+        open: stockData.Open,
+        high: stockData.High,
+        low: stockData.Low,
+        close: stockData.Close,
+        volume: stockData.Volume,
+        beta: stockData.Beta,
+        exchange: stockData.Exchange,
+        sector: stockData.Sector
+      };
+    });
+    mappedData.forEach(stock => {
+      stock.profit = stock.close - stock.price;
+    });
+    const losers = mappedData.filter(stock => stock.profit < 0);
+    const gainers = mappedData.filter(stock => stock.profit >= 0);
+    losers.sort((a, b) => a.profit - b.profit);
+    gainers.sort((a, b) => b.profit - a.profit);
+    const top10Losers = losers.slice(0, 10);
+    const top10Gainers = gainers.slice(0, 10);
+    const mergedData = top10Gainers.concat(top10Losers);
+    
+    console.log("Top 10 Highest Profit Stocks:");
+    console.log(gainers);
+    setBSEData(mergedData)
+    
   })
   .catch(error => {
     console.error('Error:', error);
@@ -722,12 +830,18 @@ const logout = () =>{
     }else{
       return
     }
-    businessNews()
+      businessNews()
       getIndices()
       getIndicesData()
       getMoreIndicesData()
       bankSector()
       Authenticate()
+      allNSEData()
+      allBSEData()
+      const mergedArray = NSEData.concat(BSEData);
+      setAllIndex([...AllIndex,...mergedArray])
+
+      
       
       
       // const observer = new IntersectionObserver(
@@ -775,9 +889,32 @@ const logout = () =>{
         <div className="scrolling-line-container">
           <div className="scrolling-line">
             {/* {scrollingText} */}
-            <p>To be completed</p>
+            {(NSEData).map(abc=>{
+              return(
+                <div className='scrolling-align'>
+                    <p key={abc.symbol}><b>{abc.name}</b> <Image src={abc.profit >=0 ? Up : Down} width={15}></Image> <b style={{color:abc.profit>=0 ? "green" : "red"}}>{((abc.profit/abc.close)*100).toFixed(2)}%</b> </p>
+                </div>
+                
+              )
+            })}
           </div>
         </div>
+
+        <div className="scrolling-line-container2">
+          <div className="scrolling-line2">
+            {/* {scrollingText} */}
+            {(BSEData).map(abc=>{
+              return(
+                <div className='scrolling-align2'>
+                    <p key={abc.symbol}><b>{abc.name}</b> <Image src={abc.profit >=0 ? Up : Down} width={15}></Image> <b style={{color:abc.profit>=0 ? "green" : "red"}}>{((abc.profit/abc.close)*100).toFixed(2)}%</b> </p>
+                </div>
+                
+              )
+            })}
+          </div>
+        </div>
+
+        
       <Navbar shouldHideOnScroll isBordered variant={"static"} css={{width:"100%", backgroundColor:"$background"}}>
       <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
         <Navbar.Brand>
