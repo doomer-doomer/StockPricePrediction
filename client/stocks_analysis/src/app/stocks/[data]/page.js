@@ -50,8 +50,7 @@ const darkTheme = createTheme({
   colors:{
     modes: {
       dark: {
-        background: '#16181A', // Set your desired background color here
-        // ... other dark theme configuration
+        background: '#16181A', 
       },
     },
   }

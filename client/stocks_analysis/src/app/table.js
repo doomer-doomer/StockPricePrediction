@@ -83,9 +83,9 @@ const CollapsibleTable = ({ data,itemsPerPage,mode  }) => {
     }
   };
 
-  const travel = (e,script)=>{
+  const travel = (script)=>{
     //e.preventDefault()
-    temp_router.push(`/stocks/${e}`)
+    temp_router.push(`/stocks/${script}`)
   }
 
   return (
@@ -113,14 +113,14 @@ const CollapsibleTable = ({ data,itemsPerPage,mode  }) => {
             <React.Fragment key={index}>
               <StyledTableRow mode={mode}>
                 <StyledTableCell mode={mode}>{startIndex+index+1}</StyledTableCell>
-                <StyledTableCell mode={mode}><a onClick={abc=>travel(row.symbol)}>{row.symbol}</a></StyledTableCell>
+                <StyledTableCell mode={mode}><p onClick={abc=>{travel(row.symbol)}}>{row.symbol}</p></StyledTableCell>
                 <StyledTableCell mode={mode}>{row.shortName}</StyledTableCell>
-                <StyledTableCell mode={mode}>{row.currentPrice}</StyledTableCell>
-                <StyledTableCell mode={mode}>{row.previousClose}</StyledTableCell>
-                <StyledTableCell mode={mode}>{(((row.currentPrice-row.previousClose)/row.previousClose)*100).toFixed(2)}%</StyledTableCell>
+                <StyledTableCell mode={mode}>₹{row.currentPrice}</StyledTableCell>
+                <StyledTableCell mode={mode}>₹{row.previousClose}</StyledTableCell>
+                <StyledTableCell mode={mode}><p style={{color: (((row.currentPrice-row.previousClose)/row.previousClose)*100).toFixed(2) >=0 ? "green" : "red"}}>{(((row.currentPrice-row.previousClose)/row.previousClose)*100).toFixed(2)}%</p></StyledTableCell>
                 <StyledTableCell mode={mode}>{row.volume}</StyledTableCell>
-                <StyledTableCell mode={mode}>{row.fiftyTwoWeekHigh}</StyledTableCell>
-                <StyledTableCell mode={mode}>{row.fiftyTwoWeekLow}</StyledTableCell>
+                <StyledTableCell mode={mode}>₹{row.fiftyTwoWeekHigh}</StyledTableCell>
+                <StyledTableCell mode={mode}>₹{row.fiftyTwoWeekLow}</StyledTableCell>
                 <StyledTableCell mode={mode}>
                   <IconButton
                     aria-label="expand row"
@@ -141,9 +141,9 @@ const CollapsibleTable = ({ data,itemsPerPage,mode  }) => {
                     <div className='parentTable'>
                     <p><b>Details: </b></p>
                       <div className='tableGrid'>
-                          <p>Day High: {row.dayHigh}</p>
+                          <p>Day High: ₹{row.dayHigh}</p>
                           
-                          <p>Day Low: {row.dayLow}</p>
+                          <p>Day Low: ₹{row.dayLow}</p>
                           <div className='innertable'>
                             <p>Beta : {row.beta}</p>
                             <Tooltip placement="right" content={"Beta is a concept that measures the expected move in a stock relative to movements in the overall market."}><button ><box-icon name='question-mark' size="xs"></box-icon></button ></Tooltip>
@@ -166,20 +166,20 @@ const CollapsibleTable = ({ data,itemsPerPage,mode  }) => {
                           <Tooltip placement="right" content={"Trailing earnings per share (EPS) is a company's earnings generated over a prior period (often a fiscal year) reported on a per-share basis."}><button ><box-icon name='question-mark' size="xs"></box-icon></button ></Tooltip>
 
                           </div>
-                          <p>Market Capital: {row.marketCap}</p>
+                          <p>Market Capital: ₹{row.marketCap}</p>
 
                           <div className='innertable'>
-                          <p>Revenue Growth: {row.revenueGrowth}</p>
+                          <p>Revenue Growth: {row.revenueGrowth}%</p>
                           <Tooltip placement="right" content={"Applying a growth rate on revenue can help determine the future earnings growth."}><button ><box-icon name='question-mark' size="xs"></box-icon></button ></Tooltip>
 
                           </div>
                           <div className='innertable'>
-                          <p>Return on Assets : {row.returnOnAssets}</p>
+                          <p>Return on Assets : {row.returnOnAssets}%</p>
                           <Tooltip placement="right" content={"The ROA figure gives investors an idea of how effective the company is in converting the money it invests into net income."}><button ><box-icon name='question-mark' size="xs"></box-icon></button ></Tooltip>
 
                           </div>
                           <div className='innertable'>
-                          <p>Return on Equity :{row.returnOnEquity} </p>
+                          <p>Return on Equity :{row.returnOnEquity}% </p>
                           <Tooltip placement="right" content={"ROE is a gauge of a corporation's profitability and how efficiently it generates those profits."}><button ><box-icon name='question-mark' size="xs"></box-icon></button ></Tooltip>
 
                           </div>

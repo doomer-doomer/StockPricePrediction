@@ -686,29 +686,6 @@ const businessNews = async()=>{
  }
 
 
- function findHighestProfits(data, k) {
-  const maxHeap = new Heap((a, b) => b.profitDifference - a.profitDifference);
-
-  for (let i = 0; i < data.length; i++) {
-    for (let j = i + 1; j < data.length; j++) {
-      const profitDiff = data[j].profit - data[i].profit;
-      const comparison = {
-        stock1: data[i].symbol,
-        stock2: data[j].symbol,
-        profitDifference: profitDiff
-      };
-
-      if (maxHeap.size() < k) {
-        maxHeap.push(comparison);
-      } else if (profitDiff > maxHeap.peek().profitDifference) {
-        maxHeap.pop();
-        maxHeap.push(comparison);
-      }
-    }
-  }
-
-  return maxHeap.toArray();
-}
 
 const allNSEData = async()=>{
   await fetch("http://localhost:5000/getAllInfoNSE",{method:"GET"})
@@ -826,6 +803,7 @@ const logout = () =>{
     
 
     if(localStorage.getItem("sessionToken")!=="" ){
+      Authenticate()
       getUserData()
     }else{
       return
@@ -835,7 +813,6 @@ const logout = () =>{
       getIndicesData()
       getMoreIndicesData()
       bankSector()
-      Authenticate()
       allNSEData()
       allBSEData()
       const mergedArray = NSEData.concat(BSEData);
