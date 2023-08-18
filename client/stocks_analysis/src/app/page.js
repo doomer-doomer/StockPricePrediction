@@ -155,11 +155,14 @@ export default function Home() {
     }
   };
 
+
+
   const { setTheme } = useNextTheme();
   const [isDark, setIsDark] = useState(false);
   const [testtheme, testsetTheme] = useState('light');
 
   const [load,setload] = useState(false)
+  const [selected, setSelected] = React.useState(new Set(["Select a Stock"]));
 
   const handleChange = (e,value)=>{
     //e.preventDefault();
@@ -174,6 +177,14 @@ export default function Home() {
       return alert("Select a Stock")
     }
     router.push(`/stocks/${script}`)
+  }
+
+  const screener = (e)=>{
+    router.push(`/stocks/screener`)
+  }
+
+  const supercharts = (e)=>{
+    router.push(`/stocks/chart/^NSEI`)
   }
 
   const areachart1 = {
@@ -900,7 +911,14 @@ const logout = () =>{
           
         </Navbar.Brand>
         <Navbar.Content hideIn="xs">
-          <Navbar.Link href="#">Features</Navbar.Link>
+        <Dropdown flat light color="default">
+          <Dropdown.Button light color="default">Features</Dropdown.Button>
+          <Dropdown.Menu aria-label="Static Actions">
+            <Dropdown.Item key="new"><Button auto light color="default" onClick={abc=>{screener()}}>Screener</Button></Dropdown.Item>
+            <Dropdown.Item key="copy"><Button auto light color="default" onClick={abc=>{supercharts()}}>SuperCharts</Button></Dropdown.Item>
+              
+          </Dropdown.Menu>
+        </Dropdown>
           <Navbar.Link href="#">Customers</Navbar.Link>
           <Navbar.Link href="#">Pricing</Navbar.Link>
           <Navbar.Link href="#">Company</Navbar.Link>
@@ -1019,26 +1037,30 @@ const logout = () =>{
             <div className='search'>
               
                 <div className='subSearch'>
+                        
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    // getOptionLabel={(option) => (
-                    //   <p style={{ color: '#16181A' }}></p>
-                    // )}
+                    
                     options={stock}
-                    sx={{ width: 300 ,backgroundColor:"#" }}
-                    
-                    
+                    getOptionLabel={option => option.label}
+                    sx={{ width: 300}}
+
                     onInputChange={handleChange}
                     renderInput={(params) => 
                     <TextField 
                       
                       {...params} 
                       variant="outlined"
-                      
+        
                       label="Search Stock"
                       
                       />}
+                      renderOption={(props, option) => (
+                        <li {...props} className="MuiAutocomplete-option" >
+                          <p style={{ color: '#16181A' }}>{option.label}</p>
+                        </li>
+                      )}
                   />
                     <IconButton aria-label="search" size="large">
                       <Search onClick={travel} fontSize="inherit"/>

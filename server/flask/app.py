@@ -691,7 +691,7 @@ def multipleScript(script,period,time):
     
 def csv_to_json(csv_file_path):
     df = pd.read_csv(csv_file_path)
-    data = [value+".NS" for value in df.iloc[:, 0]]
+    data = [{"label": value+".BO"} for value in df.iloc[:, 1]]
 
     json_data = json.dumps(data, ensure_ascii=False)
     return json_data
@@ -860,7 +860,7 @@ def stockAnalysisData(script,period,time):
 
 @app.route("/allStocks",methods=["GET"])
 def getAll():
-    csv_file_path = 'Realty.csv'
+    csv_file_path = 'Equity.csv'
     json_data = csv_to_json(csv_file_path)
     parsed_data = json.loads(json_data)
     return jsonify(parsed_data)

@@ -1,14 +1,17 @@
 "use client"
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation';
 import Link from "next/link";
 
 import './chart.css'
 
-import Image from 'next/image';
-import candle from '../[script]/candlestick.png'
-import indicator from '../[script]/indicator.png'
-import osindi from '../[script]/line-chart.png'
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import IconButton from '@mui/material/IconButton';
+import Search from '@mui/icons-material/Search'
+
+import stock from './stock';
 
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
@@ -154,10 +157,12 @@ const darkTheme = createTheme({
 })
 
 export default function Chart(){
+  const [script,setscript]=useState("");
   const [isDark, setIsDark] = useState(false);
   const [testtheme, testsetTheme] = useState('light');
   
     const pathname = usePathname();
+    const router = useRouter();
     const [theme,settheme] = useState(theme11(Highcharts))
     const [optionTheme,setoptionTheme] = useState({
       backgroundColor:"#000000",
@@ -235,13 +240,31 @@ const [firstOverlay,firstsetOverlay] =useState("ema")
 const [firstOss,setfirstOss] = useState("rsi")
 const [secOss,setsecOss] = useState("macd")
 
+const initialLoadCount = 100; 
+const [displayedItems, setDisplayedItems] = useState(stock.slice(0, initialLoadCount));
+  const itemsPerPage = 100; // Number of items to load per page
+  
+
+const handleChange = (e,value)=>{
+  //e.preventDefault();
+  setscript(value)
+  console.log(value)
+  router.push(`/stocks/${value}`)
+}
+
+const travel = (e)=>{
+
+  router.push(`/stocks/chart/${e}`)
+}
       const candlestick ={
         chart:{
           type:"line",
           style: {
             backgroundColor:isDark ? "#16181A" : "#FFFFFF",
             fontFamily:"Segoe UI",
-          }
+          },
+          
+          
         },
         title:{
           style: {
@@ -283,7 +306,15 @@ const [secOss,setsecOss] = useState("macd")
             },
           },
         },
-        
+        plotOptions: {
+          series: {
+            cursor: 'pointer', // Show the zoom-in cursor when hovering over the plot area
+          },
+        },
+        scrollablePlotArea: {
+          minWidth: 700, // Minimum width before scrolling is enabled
+          scrollPositionX: 1, // Initial scroll position (percentage of plot area)
+        },
         rangeSelector: {
           buttonTheme: {
             fill: isDark ? "#FFFFFF" : "#16181A",
@@ -368,6 +399,24 @@ const [secOss,setsecOss] = useState("macd")
           text: 'All'
       }],
       },
+      responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                chart: {
+                    
+                },
+                subtitle: {
+                    text: null
+                },
+                navigator: {
+                    enabled: false
+                }
+            }
+        }]
+    },
     
       series: [
         {
@@ -730,6 +779,9 @@ const [secOss,setsecOss] = useState("macd")
       }
   },
     xAxis:[{
+      resize: {
+        enabled: true
+      },
       plotLines:[
         {
           color: 'red', // Color value
@@ -963,12 +1015,26 @@ const [secOss,setsecOss] = useState("macd")
 
          })
         }
+        let i=1;
+        stock.forEach(stock=>{
+          stock.key = i++;
+        })
         //document.body.className = testtheme;
      },[theme,testtheme,isDark,ChartMainType,firstOverlay,secOss,firstOss])
 
-     const buttonStyle = {
-      margin:"10px"
-    };
+     const loadMoreItems = () => {
+    // Calculate the next page range
+    const currentLength = displayedItems.length;
+    const nextStartIndex = currentLength;
+    const nextEndIndex = nextStartIndex + itemsPerPage;
+
+    // Load and append the next page of items
+    const nextPageItems = stock.slice(nextStartIndex, nextEndIndex);
+    setDisplayedItems(prevItems => [...prevItems, ...nextPageItems]);
+  };
+  const buttonStyle = {
+    margin:"10px"
+  };
     return(
 
       <NextThemesProvider
@@ -983,13 +1049,56 @@ const [secOss,setsecOss] = useState("macd")
         <div className='totalchartarea'>
         <Navbar isCompact shouldHideOnScroll variant={"sticky"} css={{width:"100%", backgroundColor:"$background"}}>
         <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
-        <Navbar.Brand>
-          
-          <Text b color="inherit" >
-          {pathname.slice(14,)}
-          </Text>
-        </Navbar.Brand>
+        <Navbar.Content>
+        <Navbar.Item>
+                  <Dropdown light color="default" type="menu">
+                    <Dropdown.Button light color="default">{pathname.slice(14,)}</Dropdown.Button>
+                    <Dropdown.Menu aria-label="Dynamic Actions" items={stock.slice(0,500)} css={{height:"400px"}}>
+                      {(item) => (
+                        <Dropdown.Item
+                          key={item.key}
+                          
+                          color={item.key === "delete" ? "error" : "default"}
+                        >
+                          <Button light auto color="default" onClick={abc=>travel(item.label)}>
+                              {item.label}
+                          </Button>
+                          
+                        </Dropdown.Item>
+                      )}
+                      
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  </Navbar.Item>
+        </Navbar.Content>
         <Navbar.Content hideIn="xs">
+
+        {/* <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    
+                    options={stock}
+                    getOptionLabel={option => option.label}
+                    sx={{ width: 180 ,color:isDark ? "white" : "black",backgroundColor:isDark ? "black" : "#ffffff"}}
+                    
+                    onInputChange={handleChange}
+                    renderInput={(params) => 
+                    <TextField 
+                      
+                      {...params} 
+                      variant="outlined"
+                      label={pathname.slice(14,)}
+                      sx={{color:isDark ? "black" : "white", border:"none", borderRadius:'0px'}}
+                      disabled
+                      />}
+                      renderOption={(props, option) => (
+                        <li {...props} className="MuiAutocomplete-option" >
+                          <p style={{ color: '#16181A' }}>{option.label}</p>
+                        </li>
+                      )}
+                  /> */}
+                  
+                    
           <Navbar.Item>
           <Dropdown >
             <Dropdown.Button light color="default" >

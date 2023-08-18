@@ -67,6 +67,8 @@ export default function Screener(){
 
     const [NSEData,setNSEData] = useState([])
     const [BSEData,setBSEData] = useState([])
+    const [tempNSEData,tempsetNSEData] = useState([])
+    const [tempBSEData,tempsetBSEData] = useState([])
     const [Filtered,setFiltered] = useState(true)
 
     const collapseItems = [
@@ -180,6 +182,7 @@ export default function Screener(){
           const uniqueSectors = [...new Set(mappedData.map(stock => stock.sector))];
           console.log(uniqueSectors)
           setNSEData(mappedData)
+          tempsetNSEData(mappedData)
 
           const highestVolumeStock = mappedData.reduce((prev, current) => {
             return (prev.profit > current.profit) ? prev : current;
@@ -253,10 +256,12 @@ export default function Screener(){
           const top10Losers = losers.slice(0, 10);
           const top10Gainers = gainers.slice(0, 10);
           const mergedData = top10Gainers.concat(top10Losers);
-          
+          const uniqueSectors = [...new Set(mappedData.map(stock => stock.sector))];
+          console.log(uniqueSectors)
           console.log("Top 10 Highest Profit Stocks:");
           console.log(gainers);
           setBSEData(mappedData)
+          tempsetBSEData(mappedData)
           
         })
         .catch(error => {
@@ -421,17 +426,84 @@ export default function Screener(){
                                     </Dropdown.Button>
                                     <Dropdown.Menu
                                         aria-label="Single selection actions"
-                                        color="secondary"
+                                        css={{ maxHeight: "400px" }}
+                                        color="default"
                                         disallowEmptySelection
                                         selectionMode="single"
                                         selectedKeys={selectedSector}
                                         onSelectionChange={setSelectedSector}
                                     >
-                                        <Dropdown.Item key="all"><Button light flat color="default">All</Button></Dropdown.Item>
-                                        <Dropdown.Item key="Basic Materials"><Button light flat color="default">Basic Materials</Button></Dropdown.Item>
-                                        <Dropdown.Item key="Financial Services"><Button light flat color="default">Financial Services</Button></Dropdown.Item>
-                                        <Dropdown.Item key="single_date"><Button light flat color="default">Single Date</Button></Dropdown.Item>
-                                        <Dropdown.Item key="iteration"><Button light flat color="default">Iteration</Button></Dropdown.Item>
+                                        <Dropdown.Item key="all"><Button light auto color="default" onClick={abc=>{
+                                          tempsetNSEData(NSEData)
+                                          tempsetBSEData(BSEData)
+                                          }}>All</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Basic Materials"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Basic Materials");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Basic Materials"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Basic Materials</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Financial Services"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Financial Services");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Financial Services"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Financial Services</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Technology"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Technology");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Technology"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Technology</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Industrials"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Industrials");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Industrials"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Industrials</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Energy"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Energy");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Energy"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Energy</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Healthcare"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Healthcare");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Healthcare"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Healthcare</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Consumer Cyclical"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Consumer Cyclical");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Consumer Cyclical"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Consumer Cyclical</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Utilities"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Utilities");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Utilities"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Utilities</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Consumer Defensive"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Consumer Defensive");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Consumer Defensive"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Consumer Defensive</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Communication Services"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Communication Services");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Communication Services"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Communication Services</Button></Dropdown.Item>
+                                        <Dropdown.Item key="Real Estate"><Button light auto color="default" onClick={abc=>{
+                                          const filtteredNSE =NSEData.filter(item=>item.sector ==="Real Estate");
+                                          const filtteredBSE =NSEData.filter(item=>item.sector ==="Real Estate"); 
+                                          tempsetNSEData(filtteredNSE)
+                                          tempsetBSEData(filtteredBSE)
+                                          }}>Real Estate</Button></Dropdown.Item>
+                                      
                                     </Dropdown.Menu>
                                 </Dropdown>
                                 
@@ -441,10 +513,10 @@ export default function Screener(){
                         </div>
                         
                         <div className='screener-layout'>
-                            <h2>Filtered Stocks: {Filtered ?NSEData.length : BSEData.length}</h2>
+                            <h2>Filtered Stocks: {Filtered ?tempNSEData.length : tempBSEData.length}</h2>
                             <Box sx={{ height: 667, width: '100%',color:isDark?"white":"black" }} >
                                 <DataGrid
-                                    rows={Filtered ? NSEData : BSEData}
+                                    rows={Filtered ? tempNSEData : tempBSEData}
                                     columns={columns}
                                     initialState={{
                                     pagination: {
