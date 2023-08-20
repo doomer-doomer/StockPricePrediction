@@ -514,7 +514,7 @@ export default function Screener(){
                         
                         <div className='screener-layout'>
                             <h2>Filtered Stocks: {Filtered ?tempNSEData.length : tempBSEData.length}</h2>
-                            <Box sx={{ height: 667, width: '100%',color:isDark?"white":"black" }} >
+                            <Box sx={{ height: "auto", width: '100%',color:isDark?"white":"black" }} >
                                 <DataGrid
                                     rows={Filtered ? tempNSEData : tempBSEData}
                                     columns={columns}
@@ -528,6 +528,9 @@ export default function Screener(){
                                     }}
                                     sx={{
                                         color:isDark?"white":"black"
+                                    }}
+                                    getCellClassName={(params) => {
+                                      return params.change >= 0 ? 'hot' : 'cold';
                                     }}
                                     pageSizeOptions={[10, 25,100]}
                                     slots={{ toolbar: GridToolbar }}

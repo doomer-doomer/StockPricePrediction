@@ -67,23 +67,23 @@
     margin-top: 20px;
     padding: 40px;
     display: grid;
-    grid-template-columns: 2.5fr 1fr;
+    grid-template-columns: auto;
 }
 
 .subindices2{
     margin-top: 20px;
     padding: 40px;
     display: grid;
-    grid-template-columns: 1fr 2.5fr;
+    grid-template-columns: auto;
 }
 
 .indiceInfo{
-    text-align: center;
+    text-align: left;
     margin: auto;
 }
 
 .indiceInfo2{
-    text-align: center;
+    text-align: left;
     padding-right: 20px;
     margin: auto;
 }
@@ -91,7 +91,7 @@
 .subindiceInfo {
 
     display: grid;
-    grid-template-columns: 1fr 1fr ;
+    grid-template-columns: 0.1fr 0.1fr ;
     row-gap: 5px;
     column-gap: 10px;
     margin: auto;
@@ -181,7 +181,7 @@
   .buisnessNews{
     padding: 60px;
     display: grid;
-    grid-template-columns: auto auto auto  ;
+    grid-template-columns: 1fr 1fr auto;
     row-gap: 40px;
   }
 
@@ -329,7 +329,9 @@
         z-index: 1;
       }
 
-     
+     .indices{
+      padding: 0px;
+     }
 
       .search{
         display: absolute;

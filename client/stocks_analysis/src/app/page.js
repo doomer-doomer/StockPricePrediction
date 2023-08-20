@@ -42,9 +42,9 @@ import { Skeleton } from '@mui/material';
 
 import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
 import BusinessNewsBox from './newsBox';
-import nopic from '../app/nopic.png'
-
-import Heap from 'heap';
+import columns from './columns';
+import { DataGrid,GridToolbar } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
 
 const lightTheme = createTheme({
   type: 'light',
@@ -222,9 +222,10 @@ export default function Home() {
     },
     chart:{
       style:{
-        backgroundColor:isDark ? "#16181A" : "#ECEDEE"
+        backgroundColor:isDark ? "black" : "white"
       }
     },
+    
     navigator:{
       enabled:false
     },
@@ -296,7 +297,7 @@ export default function Home() {
     },
     chart:{
       style:{
-        backgroundColor:isDark ? "#16181A" : "#ECEDEE"
+        backgroundColor:isDark ? "black" : "white"
       }
     },
     navigator:{
@@ -370,11 +371,15 @@ export default function Home() {
     },
     chart:{
       style:{
-        backgroundColor:isDark ? "#16181A" : "#ECEDEE"
+        backgroundColor:isDark ? "black" : "white"
+      },
+      scrollbar: {
+        enabled: false
       }
     },
     navigator:{
-      enabled:false
+      enabled:false,
+     
     },
     yAxis:[
       {
@@ -554,7 +559,13 @@ export default function Home() {
      })
      .then(data => {
        if(data!==null){
-        setnifty50Data(data)
+        const mydata = data
+        let i=1
+        mydata.forEach(obj=>{
+          obj.id = i++
+          obj.change = (((obj.currentPrice-obj.previousClose)/obj.previousClose)*100).toFixed(2)
+        })
+        setnifty50Data(mydata)
        }
        
      })
@@ -575,7 +586,13 @@ export default function Home() {
   })
   .then(data => {
     if(data!==null){
-     setbankData(data)
+      const mydata = data
+      let i=1
+      mydata.forEach(obj=>{
+        obj.id = i++
+        obj.change = (((obj.currentPrice-obj.previousClose)/obj.previousClose)*100).toFixed(2)
+      })
+     setbankData(mydata)
     }
     
   })
@@ -1086,24 +1103,7 @@ const logout = () =>{
     
       <div className='indices'>
       <hr></hr>
-        <div className='subindices'> 
-        
-        <VisibilitySensor onChange={handleVisibilityChange}>
-        <div className='subindicesChart'>
-        {chartVisible ? <HighchartsReact
-            
-            highcharts={Highcharts}
-            constructorType={'stockChart'}
-            options={areachart1}
-            containerProps={{ style: { height: '500px' } }}
-          /> : 
-          <Skeleton animation='wave' variant="rounded" width={1200} height={500} />
-          }
-           
-          
-            </div>
-    </VisibilitySensor>
-            <div className='indiceInfo'>
+      <div className='indiceInfo'>
             <h1>Nifty 50 - {data1.symbol}</h1>
                 <div className='subindiceInfo'>
                   <p>High : {data1.high}</p>
@@ -1114,15 +1114,46 @@ const logout = () =>{
                 
             </div>
 
+        <div className='subindices'> 
+        
+        <HighchartsReact
+            
+            highcharts={Highcharts}
+            constructorType={'stockChart'}
+            options={areachart1}
+            containerProps={{ style: { height: '500px' } }}
+          /> 
+           
+          
+            
+    
+            
         </div>
         <div className='indextable'>
-          <CollapsibleTable data={nifty50Data} itemsPerPage={11} mode={isDark}/>
+          {/* <CollapsibleTable data={nifty50Data} itemsPerPage={5} mode={isDark}/> */}
+          <Box sx={{ height: nifty50Data!="" ? "auto" : "500px", width: '100%',color:isDark?"white":"black" }} >
+              <DataGrid
+                  rows={nifty50Data}
+                  columns={columns}
+                  initialState={{
+                  pagination: {
+                      paginationModel: {
+                      pageSize: 5,
+                      
+                      },
+                  },
+                  }}
+                  sx={{
+                      color:isDark?"white":"black"
+                  }}
+                  pageSizeOptions={[5,10, 25,100]}
+                  
+                  disableRowSelectionOnClick
+              />
+          </Box>
         </div>
         
 <hr></hr>
-       
-        <div className='subindices2'>
-
                 <div className='indiceInfo2'>
                  <h1>Nifty Bank - {data2.symbol}</h1> 
                     <div className='subindiceInfo'>
@@ -1132,46 +1163,48 @@ const logout = () =>{
                       <p>Close : {data2.prevClose}</p>
                     </div>
                 </div>
-          
-                <VisibilitySensor onChange={handleVisibilityChange2}>
+       
+        <div className='subindices2'>
+
                     <div className='subindicesChart'>
-                    {chartVisible2 ?  <HighchartsReact
+                   <HighchartsReact
                         highcharts={Highcharts}
                         constructorType={'stockChart'}
                         options={areachart2}
                         containerProps={{ style: { height: '500px' } }}
-                      />  : 
-                      <Skeleton animation='wave' variant="rounded" width={1200} height={500} />
-                      }
+                      />  
            
           
                       </div>
-              </VisibilitySensor>
+              
 
                 
         </div>
         <div className='indextable'>
-          <CollapsibleTable data={bankData} itemsPerPage={11} mode={isDark}/>
+          {/* <CollapsibleTable data={bankData} itemsPerPage={11} mode={isDark}/> */}
+          <Box sx={{ height: bankData!="" ? "auto" : "500px", width: '100%',color:isDark?"white":"black" }} >
+              <DataGrid
+                  rows={bankData}
+                  columns={columns}
+                  initialState={{
+                  pagination: {
+                      paginationModel: {
+                      pageSize: 5,
+                      
+                      },
+                  },
+                  }}
+                  sx={{
+                      color:isDark?"white":"black"
+                  }}
+                  pageSizeOptions={[5,10, 25,100]}
+                  
+                  disableRowSelectionOnClick
+              />
+          </Box>
         </div>
         <hr></hr>
-        <div className='subindices'> 
-        
-        
-        <VisibilitySensor onChange={handleVisibilityChange3}>
-            <div className='subindicesChart'>
-            {chartVisible3 ?  <HighchartsReact
-                highcharts={Highcharts}
-                constructorType={'stockChart'}
-                options={areachart3}
-                containerProps={{ style: { height: '500px' } }}
-              />: 
-              <Skeleton animation='wave' variant="rounded" width={1200} height={500} />
-              }
-              
-              
-            </div>
-     </VisibilitySensor>
-            <div className='indiceInfo'>
+        <div className='indiceInfo'>
             <h1>Sensex - {data3.symbol}</h1>
                 <div className='subindiceInfo'>
                   <p>High : {data3.high}</p>
@@ -1181,6 +1214,22 @@ const logout = () =>{
                 </div>
                 
             </div>
+        <div className='subindices'> 
+        
+        
+       
+            <div className='subindicesChart'>
+             <HighchartsReact
+                highcharts={Highcharts}
+                constructorType={'stockChart'}
+                options={areachart3}
+                containerProps={{ style: { height: '500px' } }}
+              />
+              
+              
+            </div>
+     
+           
           
 
         </div>
