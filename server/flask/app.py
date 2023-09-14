@@ -20,9 +20,6 @@ import yfinance as yf
 import csv
 import threading
 import concurrent.futures
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
 import numpy as np
 import gzip
 
@@ -37,87 +34,87 @@ app = Flask(__name__)
 CORS(app,origins="*")
 
 
-@app.route("/history",methods=['POST'])
-def stockdata():
-    if(request.method=="POST"):
-        data=None
-        script = request.json.get("script")
-        downloads_path = str(Path.home() / "Downloads")
-        path = r"{}\{}.NS.csv".format(downloads_path,script)
-        jsonpath = r"{}\{}.NS.json".format(downloads_path,script)
+# @app.route("/history",methods=['POST'])
+# def stockdata():
+#     if(request.method=="POST"):
+#         data=None
+#         script = request.json.get("script")
+#         downloads_path = str(Path.home() / "Downloads")
+#         path = r"{}\{}.NS.csv".format(downloads_path,script)
+#         jsonpath = r"{}\{}.NS.json".format(downloads_path,script)
 
-        if os.path.isfile(path):
-            os.remove(path)
+#         if os.path.isfile(path):
+#             os.remove(path)
             
-            driver = webdriver.Chrome('./chromedriver')
-            driver.set_window_position(-2000,0)
-            driver.minimize_window()
-            l= driver.get(f"https://query1.finance.yahoo.com/v7/finance/download/{script}.NS?period1=820454400&period2={timestamp}&interval=1d&events=history&includeAdjustedClose=true")
-            
-            
-            while not os.path.exists(path):
-                time.sleep(1)
-            driver.close()
-            try:
-                with open(path):
-                    db = pd.read_csv(path)
-                    data = db.to_dict(orient='records')
-                    json_data = []
-                    #final_data = {script:json_data}
-                    for row in data:
-                        json_data.append({ 
-                            'Date': row['Date'],
-                            'Open': row['Open'],
-                            'High':row['High'],
-                            'Low':row['Low'],
-                            'Close':row['Close'],
-                            'Volume':row['Volume']
-                            })
-                    with open(jsonpath, 'w') as json_file:
-                        json.dump(json_data, json_file)
-                    #db.to_json (jsonpath)
-                    f = open(jsonpath)
-                    jdata = json.load(f)
-                    f.close()
-                    return jsonify(jdata)
-            except IOError:
-                logging.exception('')
-        else:
-            driver = webdriver.Chrome('./chromedriver')
-            driver.set_window_position(-2000,0)
-            driver.minimize_window()
-            l= driver.get(f"https://query1.finance.yahoo.com/v7/finance/download/{script}.NS?period1=820454400&period2={timestamp}&interval=1d&events=history&includeAdjustedClose=true")
+#             driver = webdriver.Chrome('./chromedriver')
+#             driver.set_window_position(-2000,0)
+#             driver.minimize_window()
+#             l= driver.get(f"https://query1.finance.yahoo.com/v7/finance/download/{script}.NS?period1=820454400&period2={timestamp}&interval=1d&events=history&includeAdjustedClose=true")
             
             
-            while not os.path.exists(path):
-                time.sleep(1)
-            driver.close()
+#             while not os.path.exists(path):
+#                 time.sleep(1)
+#             driver.close()
+#             try:
+#                 with open(path):
+#                     db = pd.read_csv(path)
+#                     data = db.to_dict(orient='records')
+#                     json_data = []
+#                     #final_data = {script:json_data}
+#                     for row in data:
+#                         json_data.append({ 
+#                             'Date': row['Date'],
+#                             'Open': row['Open'],
+#                             'High':row['High'],
+#                             'Low':row['Low'],
+#                             'Close':row['Close'],
+#                             'Volume':row['Volume']
+#                             })
+#                     with open(jsonpath, 'w') as json_file:
+#                         json.dump(json_data, json_file)
+#                     #db.to_json (jsonpath)
+#                     f = open(jsonpath)
+#                     jdata = json.load(f)
+#                     f.close()
+#                     return jsonify(jdata)
+#             except IOError:
+#                 logging.exception('')
+#         else:
+#             driver = webdriver.Chrome('./chromedriver')
+#             driver.set_window_position(-2000,0)
+#             driver.minimize_window()
+#             l= driver.get(f"https://query1.finance.yahoo.com/v7/finance/download/{script}.NS?period1=820454400&period2={timestamp}&interval=1d&events=history&includeAdjustedClose=true")
+            
+            
+#             while not os.path.exists(path):
+#                 time.sleep(1)
+#             driver.close()
 
-            try:
-                with open(path):
-                    db = pd.read_csv(path)
-                    data = db.to_dict(orient='records')
-                    json_data = []
-                    #final_data = {script:json_data}
-                    for row in data:
-                        json_data.append({ 
-                            'Date': row['Date'],
-                            'Open': row['Open'],
-                            'High':row['High'],
-                            'Low':row['Low'],
-                            'Close':row['Close'],
-                            'Volume':row['Volume']
-                            })
-                    with open(jsonpath, 'w') as json_file:
-                        json.dump(json_data, json_file)
-                    #db.to_json (jsonpath)
-                    #r =requests.post(f"http://localhost:3000/{script}",files=)
-                    f = open(jsonpath)
-                    jdata = json.load(f)
-                    f.close()
-                    return jsonify(jdata)
-            except IOError:
-                logging.exception('')
+#             try:
+#                 with open(path):
+#                     db = pd.read_csv(path)
+#                     data = db.to_dict(orient='records')
+#                     json_data = []
+#                     #final_data = {script:json_data}
+#                     for row in data:
+#                         json_data.append({ 
+#                             'Date': row['Date'],
+#                             'Open': row['Open'],
+#                             'High':row['High'],
+#                             'Low':row['Low'],
+#                             'Close':row['Close'],
+#                             'Volume':row['Volume']
+#                             })
+#                     with open(jsonpath, 'w') as json_file:
+#                         json.dump(json_data, json_file)
+#                     #db.to_json (jsonpath)
+#                     #r =requests.post(f"http://localhost:3000/{script}",files=)
+#                     f = open(jsonpath)
+#                     jdata = json.load(f)
+#                     f.close()
+#                     return jsonify(jdata)
+#             except IOError:
+#                 logging.exception('')
 
 def download(script,period,time):
     x = yf.download(tickers = script, 
@@ -724,139 +721,6 @@ def hiddenMarkovTest(script,period,time):
         "N Mean (G)":mean_negative_growth,
         "N SD (G)" : std_negative_growth
     })
-
-@app.route("/stockAnalysisData/<script>/<period>/<time>",methods=["GET"])
-def stockAnalysisData(script,period,time):
-    downloads_path = str(Path.home() / "Downloads")
-    path = r"{}\{}.csv".format(downloads_path,script)
-    jsonpath = r"{}\{}.json".format(downloads_path,script)
-   
-    
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(download, script,period,time)
-        result = future.result()
-    
- 
-    df = pd.DataFrame(result)
-    df['Growth'] = df['Close'].pct_change() * 100
-    df['Growth'] = df['Growth'].round(2)
-    df['COV'] = df['Volume'].pct_change()*100
-    df['COV'] = df['COV'].round(2)
-    df = df.iloc[1:]
-    df['COV'] = np.where(np.isinf(df['COV']), 0, df['COV'])
-    df['COV'] = np.where(np.isnan(df['COV']), 0, df['COV'])
-    df.to_csv(path)
-    db = pd.read_csv(path)
-    data = db.to_dict(orient='records')
-    json_data = []
-    for row in data:
-        json_data.append({ 
-            "Close":row['Close'],
-            'Growth':row['Growth'],
-            'ChangeInVolume':row['COV']
-        })
-
-    lowest_close = min(json_data, key=lambda x: x['Close'])['Close']
-    highest_close = max(json_data, key=lambda x: x['Close'])['Close']
-
-    features = ["Close", "Growth", "ChangeInVolume"]
-    dataset = []
-    for entry in data:
-        sample = []
-        for feature in features:
-            value = entry.get(feature)
-            if value is None:
-                sample.append(np.nan)  # Replace missing values with NaN
-            else:
-                sample.append(value)
-        dataset.append(sample)
-    dataset = np.array(dataset)
-
-    normalized_dataset = dataset.copy()
-    for i in range(dataset.shape[1]):
-        feature_values = dataset[:, i]
-        valid_values = feature_values[~np.isnan(feature_values)]
-        if valid_values.size > 0:
-            feature_min = np.min(valid_values)
-            feature_max = np.max(valid_values)
-            normalized_dataset[:, i] = [(value - feature_min) / (feature_max - feature_min) if ~np.isnan(value) else 0 for value in feature_values]
-        else:
-            normalized_dataset[:, i] = 0
-            
-    n_steps = 3  
-
-    X = []
-    y = []
-
-    for i in range(n_steps, len(data)):
-        X.append(normalized_dataset[i - n_steps:i])
-        y.append(normalized_dataset[i][0])  
-
-    X = np.array(X)
-    y = np.array(y)
-  
-
-    
-    print("X shape:", X.shape) 
-    print("y shape:", y.shape)
-
-    
-    
-    split_ratio = 0.9 
-    split_index = int(split_ratio * len(X))
-
-    X_train = X[:split_index]
-    y_train = y[:split_index]
-    X_val = X[split_index:]
-    y_val = y[split_index:]
-
-    print(X_val.shape)
-
-    model = Sequential()
-    model.add(LSTM(64, input_shape=(X.shape[1], X.shape[2])))
-    model.add(Dense(1))
-
-
-    model.compile(optimizer='adam', loss='mse')
-
-    batch_size = 32
-    epochs = 30
-
-    model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(X_val, y_val))
-
-    ###Training the Model
-
-    # y_pred = model.predict(X_val)
-
-    # valid_indices = ~np.isnan(y_pred.flatten()) & ~np.isnan(y_val.flatten())
-    # y_pred_valid = y_pred.flatten()[valid_indices]
-    # y_val_valid = y_val.flatten()[valid_indices]
-
-    # mse = np.mean(np.square(y_val_valid - y_pred_valid))
-
-    # model.save('patternPredictor.keras')
-
-    loaded_model = keras.models.load_model('patternPredictor.keras')
-
-    # Make predictions using the loaded model
-    predictions = loaded_model.predict(X_val)
-
-    min_target = np.min(predictions)
-    max_target = np.max(predictions)
-
-    actual_predictions = predictions * (highest_close - lowest_close) + lowest_close
-    print(actual_predictions)
-    return jsonify({"Prediction" : actual_predictions[0][0]})
-    with open(jsonpath, 'w') as json_file:
-        json.dump(json_data, json_file)
-    if(os.path.exists(path) and os.path.exists(jsonpath)):
-        f = open(jsonpath)
-        data = json.load(f)
-        f.close()
-        os.remove(jsonpath)
-        os.remove(path)
-        return jsonify(data)
-    return jsonify({"Error"})
 
 @app.route("/allStocks",methods=["GET"])
 def getAll():
