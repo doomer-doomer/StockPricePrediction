@@ -2,7 +2,7 @@
 
 import React ,{useState,useEffect} from 'react'
 import { Button, Input, Spacer } from "@nextui-org/react";
-import Razorpay from 'razorpay';
+//import Razorpay from 'razorpay';
 
 export default function Subscriptions(){
     const [userInfo,setuserInfo] = useState({
@@ -29,8 +29,8 @@ export default function Subscriptions(){
 
     function pay(e){
         e.preventDefault();
-        const rzpay = new Razorpay(userInfo);
-        rzpay.open();
+        //const rzpay = new Razorpay(userInfo);
+        //rzpay.open();
     }
     return(
         <div>
