@@ -939,13 +939,15 @@ const travel = (e)=>{
         // getShortChartData(pathname.slice(14,),"1mo","15m")
         // getShortChartData(pathname.slice(14,),"3mo","30m")
         setcandlestick(candlestick)
-        if(localStorage.getItem("theme")==="true"){
-          setIsDark(true)
-        }else if(localStorage.getItem("theme")==="false"){
-          setIsDark(false)
-        }else{
-          return
-        }
+        if (typeof window !== 'undefined') {
+          if(localStorage.getItem("theme")==="true"){
+            setIsDark(true)
+          }else if(localStorage.getItem("theme")==="false"){
+            setIsDark(false)
+          }else{
+            return
+          }uuuuuuuuuuu
+      }
   
         if(isDark){
           setcandlestick(

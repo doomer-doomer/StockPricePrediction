@@ -723,7 +723,7 @@ export default function SingleStock(){
             const { resolutions } = zzz.thumbnail;
             const { url } = resolutions[0];
             return <Newsbox
-          
+            key = {url}
             img = {url}
             title= {zzz.title}
             date ={zzz.providerPublishTime}
@@ -1004,6 +1004,7 @@ export default function SingleStock(){
       //setnewchart(abc=>candlestick("ema","macd","stochastic"))
       //setnewchart(abc=>candlestick())
       console.log(localStorage.getItem("theme"))
+      if (typeof window !== 'undefined') {
       if(localStorage.getItem("theme")==="true"){
         setIsDark(true)
       }else if(localStorage.getItem("theme")==="false"){
@@ -1011,12 +1012,15 @@ export default function SingleStock(){
       }else{
         return
       }
+    }
 
+    if (typeof window !== 'undefined') {
       if(localStorage.getItem("sessionToken")!=="" ){
         getUserData()
       }else{
         return
       }
+    }
     
     const interval = setInterval(async () => {
       

@@ -155,7 +155,7 @@ export default function LoginPage(){
                         </Button> : 
                         <Button color="primary" shadow type="submit">Login</Button>}
                     </form>
-                    <p>Don't have an account?</p>
+                    <p>Don&apos;t have an account?</p>
                     <Link href="/signup">Register</Link>
             </div>
         </div>

@@ -9,7 +9,6 @@ import { NextUIProvider } from '@nextui-org/react';
 import { createTheme } from "@nextui-org/react"
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
-import Lottie from "lottie-react";
 import "../[status]/status.css"
 import "boxicons"
 
@@ -71,6 +70,7 @@ export default function Authenticate(){
 
         validateMail();
         console.log(path.slice(6,));
+        
         if(localStorage.getItem("theme")==="true"){
             setIsDark(true)
           }else if(localStorage.getItem("theme")==="false"){
