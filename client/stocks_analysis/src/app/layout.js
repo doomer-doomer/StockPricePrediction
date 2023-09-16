@@ -14,6 +14,7 @@ export default function RootLayout({ children }) {
   return (
     // <Provider store={store}>
     <html lang="en">
+      
       <body suppressHydrationWarning={true} className={inter.className}>
         {children}
         <Analytics/>
