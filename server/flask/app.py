@@ -173,9 +173,16 @@ def longinterval(script,period,time):
         f = open(jsonpath)
         data = json.load(f)
         f.close()
+        data = json.dumps(data)
+        compressed_data = gzip.compress(data.encode('utf-8'))
+
+        response = Response(compressed_data, content_type='application/json')
+        response.headers['Content-Encoding'] = 'gzip'
+        response.headers['Content-Length'] = len(compressed_data)
+
         os.remove(jsonpath)
         os.remove(path)
-        return jsonify(data)
+        return response
     return jsonify({"Error"})
 
 @app.route("/shorthistory/<script>/<period>/<time>",methods=["GET"])
@@ -208,16 +215,29 @@ def shortinterval(script,period,time):
         f = open(jsonpath)
         data = json.load(f)
         f.close()
+        data = json.dumps(data)
+        compressed_data = gzip.compress(data.encode('utf-8'))
+
+        response = Response(compressed_data, content_type='application/json')
+        response.headers['Content-Encoding'] = 'gzip'
+        response.headers['Content-Length'] = len(compressed_data)
         os.remove(jsonpath)
         os.remove(path)
-        return jsonify(data)
+        return response
     return jsonify({"Error"})
 
 @app.route("/info/<script>",methods=["GET"])
 def information(script):
     x = yf.Ticker(script)
     info = x.info
-    return jsonify(info)
+    data = json.dumps(info)
+    compressed_data = gzip.compress(data.encode('utf-8'))
+
+    response = Response(compressed_data, content_type='application/json')
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Content-Length'] = len(compressed_data)
+
+    return response
 
 @app.route("/autoSector",methods=["GET"])
 def autoSector():
@@ -240,6 +260,8 @@ def autoSector():
 
     info = [a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,
             a11,a12,a13,a14,a15]
+    
+    
     return jsonify(info)
 
 @app.route("/bankSector",methods=["GET"])
