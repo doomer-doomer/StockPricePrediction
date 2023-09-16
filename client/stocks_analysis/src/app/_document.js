@@ -14,7 +14,9 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head>{CssBaseline.flush()}</Head>
+        <Head>{CssBaseline.flush()}
+        <link rel='shortcut icon' href='/favicon.ico'></link>
+        </Head>
         <body>
           <Main />
           <NextScript />
