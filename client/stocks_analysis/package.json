@@ -22,6 +22,7 @@
     "boxicons": "^2.1.4",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
+    "fs": "^0.0.1-security",
     "highcharts": "^11.0.1",
     "highcharts-export-data": "^0.1.7",
     "highcharts-exporting": "^0.1.7",
@@ -40,6 +41,7 @@
     "react-lazy-load-image-component": "^1.6.0",
     "react-virtualized": "^9.22.5",
     "react-visibility-sensor": "^5.1.1",
-    "styled-components": "^5.3.11"
+    "styled-components": "^5.3.11",
+    "tls": "^0.0.1"
   }
 }
