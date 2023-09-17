@@ -946,7 +946,7 @@ const travel = (e)=>{
             setIsDark(false)
           }else{
             return
-          }uuuuuuuuuuu
+          }
       }
   
         if(isDark){
