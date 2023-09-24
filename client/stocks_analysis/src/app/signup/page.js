@@ -12,7 +12,8 @@ import { Input } from "@nextui-org/react";
 import { NextUIProvider } from '@nextui-org/react';
 import { createTheme } from "@nextui-org/react"
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const lightTheme = createTheme({
     type: 'light',
@@ -57,6 +58,37 @@ export default function LoginPage(){
     const [checkpass,setpass]=useState("")
     const router = useRouter();
 
+    function displaySuccessToast(msg){
+        toast.success(
+            msg, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: !isDark?"light":"dark",
+                
+                }
+        )
+    }
+
+    function displayErrorToast(msg){
+        toast.error(
+            msg, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: !isDark?"light":"dark",
+                
+                }
+        )
+    }
     async function Authenticate(){
         try {
             const token = localStorage.getItem("sessionToken")
@@ -81,21 +113,25 @@ export default function LoginPage(){
     
         if(cred.user_name ==="" || cred.email==="" || cred.password===""){
             setload(false)
-            return alert("Insufficient Detials")
+            return displayErrorToast("Insufficient Detials")
         }
         if(cred.password === checkpass){
             try {
                 const body = cred
-                const response = await fetch("http://localhost:5002/signup",{
+                const response = await toast.promise(fetch("http://localhost:5002/signup",{
                     method:"POST",
                     headers:{"Content-Type":"application/json"},
                     body:JSON.stringify(body)
+                }),{
+                    pending:"Creating Account...",
+                    success:"Account created successfully!",
+                    error:"Failed to create account!"
                 })
     
                 const reply = await response.json()
                 if(!response.ok){
                     setload(false)
-                    return alert(reply)
+                    return displayErrorToast(reply)
                 }
 
                 localStorage.setItem('sessionToken',reply.sessionToken)
@@ -139,6 +175,7 @@ export default function LoginPage(){
         dark: darkTheme.className
         }}
          >
+            <ToastContainer/>
         <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
         <div className="reglay">
             <div className="regbox">
@@ -146,7 +183,7 @@ export default function LoginPage(){
                 <form onSubmit={submit}>
                         <Input 
                         bordered 
-                        clearable
+                        
                         width="250px"
                         labelPlaceholder="Username" 
                         color="default"
@@ -160,7 +197,7 @@ export default function LoginPage(){
                    
                         <Input 
                         bordered 
-                        clearable
+                        
                         width="250px"
                         labelPlaceholder="Email" 
                         color="default"
@@ -174,7 +211,7 @@ export default function LoginPage(){
                        
                        <Input.Password 
                         bordered 
-                        clearable
+                        
                         width="250px"
                         labelPlaceholder="Password" 
                         color="default"
@@ -188,7 +225,7 @@ export default function LoginPage(){
                         
                         <Input.Password 
                         bordered 
-                        clearable
+                        
                         width="250px"
                         labelPlaceholder="Re-type Password" 
                         color="default"
@@ -201,7 +238,7 @@ export default function LoginPage(){
                         
                         <Input 
                         bordered 
-                        clearable
+                        
                         width="250px"
                         labelPlaceholder="Age" 
                         color="default"
@@ -216,7 +253,7 @@ export default function LoginPage(){
                     
                         <Input 
                         bordered 
-                        clearable
+                        
                         width="250px"
                         labelPlaceholder="Contact" 
                         color="default"

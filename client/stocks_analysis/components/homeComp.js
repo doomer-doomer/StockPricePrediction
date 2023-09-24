@@ -628,7 +628,7 @@ async function getUserData(){
 
       const res = await response.json();
       if(!response.ok){
-        return alert("Not workin")
+        return 
       }
       console.log(res.user_name)
       setUserData({...userData,
@@ -1033,6 +1033,8 @@ const logout = () =>{
       </Navbar.Collapse>
       </Navbar>
         </div>
+
+       
     <div className='startpage'>
       <div className='midstartpage'>
 
@@ -1051,9 +1053,14 @@ const logout = () =>{
                   {/* <img src="https://images.pexels.com/photos/355770/pexels-photo-355770.jpeg?cs=srgb&dl=pexels-pixabay-355770.jpg&fm=jpg"></img> */}
                 </div>
 
+               
+
             <div className='search'>
+            <div className='maintitle'>
+                  <h1><b>Stay Ahead with Real-Time Insights and Expert Analysis on India's Financial Landscape</b></h1>
+                  </div>
               
-                <div className='subSearch'>
+                <div className='subSearch' >
                         
                 <Autocomplete
                     disablePortal

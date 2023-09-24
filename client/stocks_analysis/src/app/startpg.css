@@ -63,11 +63,23 @@
     
 }
 
+.maintitle{
+  z-index: 1;
+
+}
+
+.search{
+  display: block ;
+}
+
 .subindices{
     margin-top: 20px;
-    padding: 40px;
+    
     display: grid;
     grid-template-columns: auto;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .subindices2{
@@ -164,10 +176,19 @@
     align-items: center;
     position: relative;
     height: 100vh;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
   }
 
   .subSearch{
     display: flex;
+    padding: 10px;
+    border-radius: 10px;
   }
 
   .startpgpic img{
@@ -259,7 +280,8 @@
     padding: 20px;
     border: 1px solid #ccc;
   }
-  
+ 
+
   @keyframes scrollText {
     0% {
       transform: translateX(25%);

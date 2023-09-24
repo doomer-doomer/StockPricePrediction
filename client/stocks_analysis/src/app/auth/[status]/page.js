@@ -61,6 +61,7 @@ export default function Authenticate(){
                 document.getElementById("statusBox").style.boxShadow = "0px 8px 100px 40px rgba(23,201,100,0.3)"
                 document.getElementById("status").style.color = "#17C964"
                 setbtncol("success")
+                setlogo(true)
             }
         } catch (error) {
             console.error(error.message)

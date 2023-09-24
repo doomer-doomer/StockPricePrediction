@@ -46,6 +46,7 @@ export default function ScreenerComp(){
     const [load,setload] = useState(false)
     const [testtheme, testsetTheme] = useState('light');
 
+    const mode = React.useRef(null);
     const [selectedSector, setSelectedSector] = React.useState(new Set(["All"]));
    
 

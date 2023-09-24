@@ -9,9 +9,51 @@ const status = require('./activate')
 const nodemailer = require('nodemailer')
 const mailgen = require('mailgen');
 const validate = require('./validate');
+const Razorpay = require('razorpay');
 
 app.use(cors());
 app.use(express.json());
+
+//Databse Quries
+// CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+//CREATE TABLE Users( user_id uuid DEFAULT uuid_generate_v4(), user_name VARCHAR NOT NULL,password VARCHAR NOT NULL, email VARCHAR NOT NULL,user_age SMALLINT NOT NULL, gender VARCHAR, contact BIGINT, country VARCHAR, status VARCHAR NOT NULL DEFAULT 'Not Verified');
+
+//CREATE TABLE Transactions(id VARCHAR NOT NULL,amount_paid BIGINT,amount_due BIGINT, attempts SMALLINT, createdAt BIGINT, currency VARCHAR NOT NULL DEFAULT 'INR',type VARCHAR,status VARCHAR);
+
+var instance = new Razorpay({
+    key_id:process.env.KEY_ID,
+    key_secret:process.env.KEY_SECRET
+});
+
+app.post('/request',async(req,res)=>{
+    try {
+        const {amount,currency} = req.body;
+        const order = instance.orders.create({amount,currency},async function(err,neworder){
+            console.log(neworder);
+            try {
+                const create = await pool.query('INSERT INTO Transactions (id,amount_paid,amount_due,attempts,createdAt,currency,type,status) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *',
+                [neworder.id,neworder.amount_due,neworder.amount_paid,neworder.attempts,neworder.created_at,neworder.currency,neworder.entity,neworder.status])
+            } catch (error) {
+                console.log(error.message)
+            }
+            
+            return res.json(neworder)
+        })
+    } catch (error) {
+        res.json("Error on the Razorpay's server")
+    }
+})
+
+app.post('/getrequest',async(req,res)=>{
+    try {
+        const {id} = req.body
+        const get = await pool.query("SELECT * FROM Transactions WHERE id = $1",
+        [id]);
+        res.json(get.rows[0])
+    } catch (error) {
+        res.json("Error in my server")
+    }
+})
 
 app.post('/signup',async(req,res)=>{
     try {

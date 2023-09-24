@@ -1,5 +1,6 @@
 "use client"
 import dynamic from 'next/dynamic'
+import { ToastContainer } from 'react-toastify';
 
 const SSRfreeHome = dynamic(()=>import('../../components/homeComp'),{ssr:false});
 
@@ -1276,6 +1277,7 @@ export default function Home() {
   return(
     <div>
       <SSRfreeHome/>
+      
       </div>
   )
 }
