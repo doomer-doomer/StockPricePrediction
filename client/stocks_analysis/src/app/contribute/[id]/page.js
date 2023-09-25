@@ -7,7 +7,7 @@ export default function paymentGateway(){
 
     return (
         <div>
-            <PaymentGatewayComponent/>
+            {/* <PaymentGatewayComponent/> */}
         </div>
     )
 }
