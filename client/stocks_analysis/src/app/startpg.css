@@ -63,13 +63,17 @@
     
 }
 
-.maintitle{
+.search .maintitle h1{
   z-index: 1;
-
+  font-size: 4vmax;
+  margin-top: 20px;
+  color: black;
 }
 
 .search{
-  display: block ;
+  display: grid ;
+  grid-template-columns: auto;
+  padding: 10px;
 }
 
 .subindices{
@@ -143,7 +147,23 @@
     font-size: xxx-large;
 }
 
+.boxindices{
+  border:none;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  position: absolute;
+  top:600px;
+  
+}
 
+.innerboxindices{
+  border:none;
+  border-radius: 10px;
+  
+  padding: 20px;
+  margin-left: 30px;
+}
 
 .timedetails{
     text-align: center;
@@ -171,17 +191,17 @@
   }
 
   .startpage .search{
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     position: relative;
     height: 100vh;
 
-    position: absolute;
+    /* position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 0; */
 
   }
 
@@ -216,11 +236,11 @@
     height: 30px;
     color: black;
     overflow: hidden;
-    position: absolute;
-    top: 0;
-    margin-top: 80px;
+    display:flex;
+    margin-top:5px;
+    margin-bottom: 5px;
     z-index: 9999;
-    opacity: 0; /* Start with opacity set to 0 */
+    opacity: 0; 
     animation: fadeInOut 70s ease-in-out infinite;
     background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
     backdrop-filter: blur(10px);

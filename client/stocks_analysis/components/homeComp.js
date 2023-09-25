@@ -71,7 +71,7 @@ sand(Highcharts);
 
 export default function SSRfreeHome() {
 
-  const yfinanceURL = "https://yfinance-server.onrender.com"
+  const yfinanceURL = "http://127.0.0.1:5000"
 
   const [script,setscript]=useState("");
   const [open, setOpen] = useState(false);
@@ -891,36 +891,10 @@ const logout = () =>{
   >
     <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
       <div>
-        <div className="scrolling-line-container">
-          <div className="scrolling-line">
-            {/* {scrollingText} */}
-            {(NSEData).map(abc=>{
-              return(
-                <div className='scrolling-align' key={abc.name}>
-                    <p key={abc.name}><b>{abc.name}</b> <Image src={abc.profit >=0 ? Up : Down} width={15}></Image> <b style={{color:abc.profit>=0 ? "green" : "red"}}>{((abc.profit/abc.close)*100).toFixed(2)}%</b> </p>
-                </div>
-                
-              )
-            })}
-          </div>
-        </div>
-
-        <div className="scrolling-line-container2">
-          <div className="scrolling-line2">
-            {/* {scrollingText} */}
-            {(BSEData).map(abc=>{
-              return(
-                <div className='scrolling-align2' key={abc.name}>
-                    <p key={abc.name}><b>{abc.name}</b> <Image src={abc.profit >=0 ? Up : Down} width={15}></Image> <b style={{color:abc.profit>=0 ? "green" : "red"}}>{((abc.profit/abc.close)*100).toFixed(2)}%</b> </p>
-                </div>
-                
-              )
-            })}
-          </div>
-        </div>
+        
 
         
-      <Navbar shouldHideOnScroll isBordered variant={"static"} css={{width:"100%", backgroundColor:"$background"}}>
+      <Navbar shouldHideOnScroll={false} variant={"sticky"} css={{width:"100%", backgroundColor:"$background"}}>
       <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
         <Navbar.Brand>
         <box-icon name='trending-up' color='#1aae30' ></box-icon>
@@ -1046,12 +1020,39 @@ const logout = () =>{
                 alt='homeimg'
                 src='https://images.pexels.com/photos/355770/pexels-photo-355770.jpeg?cs=srgb&dl=pexels-pixabay-355770.jpg&fm=jpg'
                 effect='blur'
-                
               />
             </div>
             
                   {/* <img src="https://images.pexels.com/photos/355770/pexels-photo-355770.jpeg?cs=srgb&dl=pexels-pixabay-355770.jpg&fm=jpg"></img> */}
                 </div>
+
+                <div className="scrolling-line-container">
+          <div className="scrolling-line">
+            {/* {scrollingText} */}
+            {(NSEData).map(abc=>{
+              return(
+                <div className='scrolling-align' key={abc.name}>
+                    <p key={abc.name}><b>{abc.name}</b> <Image src={abc.profit >=0 ? Up : Down} width={15}></Image> <b style={{color:abc.profit>=0 ? "green" : "red"}}>{((abc.profit/abc.close)*100).toFixed(2)}%</b> </p>
+                </div>
+                
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="scrolling-line-container2">
+          <div className="scrolling-line2">
+            {/* {scrollingText} */}
+            {(BSEData).map(abc=>{
+              return(
+                <div className='scrolling-align2' key={abc.name}>
+                    <p key={abc.name}><b>{abc.name}</b> <Image src={abc.profit >=0 ? Up : Down} width={15}></Image> <b style={{color:abc.profit>=0 ? "green" : "red"}}>{((abc.profit/abc.close)*100).toFixed(2)}%</b> </p>
+                </div>
+                
+              )
+            })}
+          </div>
+        </div>
 
                
 
@@ -1097,7 +1098,37 @@ const logout = () =>{
      
      
         
+<div className="boxindices" >
+      <div className="innerboxindices" style={{boxShadow:isDark? "0px 7px 3px rgba(22,27,16,0.5)":"0px 7px 3px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+              <h4>Nifty 50</h4>
+              <HighchartsReact
+                highcharts={Highcharts}
+                constructorType={'stockChart'}
+                options={areachart1}
+                containerProps={{ style: { height: '150px',width:"300px" } }}
+              /> 
+      </div>
 
+      <div className="innerboxindices" style={{boxShadow:isDark? "0px 7px 3px rgba(22,27,16,0.5)":"0px 7px 3px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+              <h4>Banknifty</h4>
+              <HighchartsReact
+                highcharts={Highcharts}
+                constructorType={'stockChart'}
+                options={areachart2}
+                containerProps={{ style: { height: '150px',width:"300px" } }}
+              /> 
+      </div>
+
+      <div className="innerboxindices" style={{boxShadow:isDark? "0px 7px 3px rgba(22,27,16,0.5)":"0px 7px 3px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+              <h4>Sensex</h4>
+              <HighchartsReact
+                highcharts={Highcharts}
+                constructorType={'stockChart'}
+                options={areachart3}
+                containerProps={{ style: { height: '150px',width:"300px" } }}
+              /> 
+      </div>
+</div>
           
         
     
@@ -1123,13 +1154,7 @@ const logout = () =>{
 
         <div className='subindices'> 
         
-        <HighchartsReact
-            
-            highcharts={Highcharts}
-            constructorType={'stockChart'}
-            options={areachart1}
-            containerProps={{ style: { height: '500px' } }}
-          /> 
+        
            
           
             
