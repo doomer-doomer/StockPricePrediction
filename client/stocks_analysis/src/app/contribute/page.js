@@ -1,14 +1,14 @@
-"use client"
+// "use client"
 
-import React ,{useState,useEffect} from 'react'
-import { Button, Input, Spacer } from "@nextui-org/react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import React ,{useState,useEffect} from 'react'
+// import { Button, Input, Spacer } from "@nextui-org/react";
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
-import { useRouter } from 'next/navigation';
-//import Razorpay from 'razorpay';
+// import { useRouter } from 'next/navigation';
+// //import Razorpay from 'razorpay';
 
-export default function Contributions(){
+// export default function Contributions(){
 
     // const [paymentApproval,setpaymentApproval] = useState("")
 
@@ -157,5 +157,5 @@ export default function Contributions(){
            
     //     </div>
         
-    // )
-}
+//     // )
+// }
