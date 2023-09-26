@@ -1,0 +1,6 @@
+.singlerow{
+    display: flex;
+    justify-content: space-between;
+    border: none;
+    border-radius: 10px;
+}

@@ -948,6 +948,15 @@ const travel = (e)=>{
             return
           }
       }
+
+    //   if (typeof window !== 'undefined') {
+    //   if(localStorage.getItem("sessionToken")!=="" ){
+    //     Authenticate()
+    //     getUserData()
+    //   }else{
+    //     return
+    //   }
+    // }
   
         if(isDark){
           setcandlestick(

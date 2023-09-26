@@ -307,74 +307,7 @@ export default function ScreenerComp(){
       <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
 
         <div className="screener-nav">
-        <Navbar shouldHideOnScroll isBordered variant={"static"} css={{width:"100%", backgroundColor:"$background"}}>
-            <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
-                <Navbar.Brand>
-                <box-icon name='trending-up' color='#1aae30' ></box-icon>
-                <Text b>GrowthIN</Text>
-                
-                </Navbar.Brand>
-                <Navbar.Content hideIn="xs">
-                <Navbar.Link href="#">Features</Navbar.Link>
-                <Navbar.Link href="#">Customers</Navbar.Link>
-                <Navbar.Link href="#">Pricing</Navbar.Link>
-                <Navbar.Link href="#">Company</Navbar.Link>
-                {!load && <Navbar.Link color="inherit" href="#">
-                <Link href={'/signup'}>Signup</Link>
-                </Navbar.Link>}
-                {load ?  
-                <Dropdown placement="bottom-left">
-                <Dropdown.Trigger>
-                    <Avatar
-                    color="default"
-                    bordered
-                    text={(userData.user_name).slice(0,2)}
-                    zoomed
-                    size="md"
-                    />
-                </Dropdown.Trigger>
-                <Dropdown.Menu color="default" aria-label="Avatar Actions">
-                    <Dropdown.Item key="profile" css={{ height: "$18" }}>
-                    <Text b color="inherit" css={{ d: "flex" }}>
-                        Signed in as
-                    </Text>
-                    <Text b color="inherit" css={{ d: "flex" }}>
-                        {userData.email}
-                    </Text>
-                    </Dropdown.Item>
-                    <Dropdown.Item key="settings" withDivider>
-                    My Settings
-                    </Dropdown.Item>
-                    <Dropdown.Item key="team_settings">Team Settings</Dropdown.Item>
-                    <Dropdown.Item key="analytics" withDivider>
-                    Analytics
-                    </Dropdown.Item>
-                    <Dropdown.Item key="system">System</Dropdown.Item>
-                    <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
-                    <Dropdown.Item key="help_and_feedback" withDivider>
-                    Help & Feedback
-                    </Dropdown.Item>
-                    <Dropdown.Item key="logout" color="error" withDivider css={{textAlign:"start" ,paddingRight:"100px",display:"flex"}}>
-                    
-                        <Button onClick={abc=>logout()} size="xs" color="error" light css={{ fontSize:"$md",marginRight:"$1"}}>Logout</Button>
-                        
-                    
-                    </Dropdown.Item>
-                </Dropdown.Menu>
-                </Dropdown>
-                
-                : 
-                <Navbar.Item>
-                    <Button auto flat href="#">
-                    <Link href={'/login'}>Login</Link>
-                    </Button>
-                </Navbar.Item>}
-
-                </Navbar.Content>
-            
-
-                <Navbar.Content>
-                <Navbar.Item>
+        
                 <Switch
                 checked={!isDark}
                 onChange={(e) => testsetTheme(e.target.checked ? 
@@ -390,28 +323,7 @@ export default function ScreenerComp(){
                 iconOn={<SunIcon filled />}
                 iconOff={<MoonIcon filled />}
                 />
-                    
-                </Navbar.Item>
-                </Navbar.Content>
-                <Navbar.Collapse css={{
-                }}>
-                {collapseItems.map((item, index) => (
-                <Navbar.CollapseItem key={item}>
-                    <Link
-                    color="inherit"
-                    css={{
-                        width:"100%",
-                
-                    
-                    }}
-                    href="#"
-                    >
-                    {item}
-                    </Link>
-                </Navbar.CollapseItem>
-                ))}
-            </Navbar.Collapse>
-            </Navbar>
+               
         </div>
         <div className='screener-content'>
             

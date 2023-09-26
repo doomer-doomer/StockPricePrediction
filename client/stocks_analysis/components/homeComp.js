@@ -22,7 +22,10 @@ import { Avatar } from '@nextui-org/react';
 import { Navbar, Button, Text, Card, Radio, theme,Container, Row } from "@nextui-org/react";
 import Up from '../src/app/arrow-up.png'
 import Down from '../src/app/down.png'
-
+import ScreenerDark from '../images/screener/ScreenerDark.jpg'
+import ScreenerLight from '../images/screener/ScreenerLight.jpg'
+import ChartDark from '../images/chart/ChartDark.png'
+import ChartLight from '../images/chart/ChartLight.png'
 import stock from '../src/app/stock';
 
 import { NextUIProvider } from '@nextui-org/react';
@@ -35,6 +38,9 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
+import AreaChart from './areachart';
+import { useDraggable } from "react-use-draggable-scroll";
+
 // import VisibilitySensor from 'react-visibility-sensor';
 // import { Skeleton } from '@mui/material';
 
@@ -43,6 +49,7 @@ import BusinessNewsBox from '../src/app/newsBox';
 import columns from '../src/app/columns';
 import { DataGrid,GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
+import CustomTable from './customTable';
 
 const HighchartsReact = dynamic(() => import('highcharts-react-official'), {
   ssr: false, // This disables SSR for this component
@@ -95,6 +102,9 @@ export default function SSRfreeHome() {
   const [AllIndex,setAllIndex]=useState(NSEData.concat(BSEData))
 
   const [bNews,setbusinessNews]=useState([])
+
+  const [topgainers,setTopgainers] = useState([]);
+  const [toplosers,setToplosers] = useState([]);
 
   const router = useRouter();
 
@@ -158,6 +168,8 @@ export default function SSRfreeHome() {
 
   const [isDark, setIsDark] = useState(false);
   const [testtheme, testsetTheme] = useState('light');
+  const containers = useRef();
+  const { events } = useDraggable(containers);
 
   const [load,setload] = useState(false)
   const [selected, setSelected] = React.useState(new Set(["Select a Stock"]));
@@ -177,6 +189,10 @@ export default function SSRfreeHome() {
     router.push(`/stocks/${script}`)
   }
 
+  const travelSpecific = (e)=>{
+    router.push(`/stocks/chart/${e}`)
+  }
+
   const screener = (e)=>{
     router.push(`/stocks/screener`)
   }
@@ -185,80 +201,43 @@ export default function SSRfreeHome() {
     router.push(`/stocks/chart/^NSEI`)
   }
 
-  const areachart1 = {
-    rangeSelector: {
-      selected: 5,
-      buttonTheme: {
-        fill: isDark ? "#FFFFFF" : "#16181A",
-            stroke: 'none',
-            'stroke-width': 0,
-            r: 8,
-            style: {
-                color: isDark ? "#16181A" : "#ECEDEE",
-                fontWeight: 'bold'
-            },
-            states: {
-                hover: {
-                  fill: isDark ? "#16181A" : "#ECEDEE",
-                    style: {
-                        color: isDark ? "#FFFFFF" : "#16181A"
-                    }
-                },
-                select: {
-                    fill: isDark ? "#16181A" : "#ECEDEE",
-                    style: {
-                        color: isDark ? "#FFFFFF" : "#16181A"
-                    }
-                }
-                // disabled: { ... }
-            }
-        },
-        labelStyle: {
-          color: isDark ? "#ECEDEE" : "#16181A",
-          fontWeight: 'bold'
-      },
-    },
-    chart:{
-      style:{
-        backgroundColor:isDark ? "black" : "white"
-      }
-    },
-    
-    navigator:{
-      enabled:false
-    },
-    yAxis:[
-      {
-        gridLineWidth: 0,
-      }
-    ],
-    series: [
-      {
-        name: "NIFTY 50",
-        type:"spline",
-        data:nifty.map(obj=>
-          [new Date(obj.Date).getTime(),obj.Close]
-        ),
-        
-        tooltip: {
-          valueDecimals: 2
-        },
-        fillColor: {
-          linearGradient: {
-              x1: 0,
-              y1: 0,
-              x2: 0,
-              y2: 1
-          },
-          stops: [
-              [0, "#6A0DAD"],
-              [1, "ABA9AD"]
-          ]
-      },
-      color:"#6A0DAD",
-      }, 
-    ],
-  };
+  const [isMouseDown, setIsMouseDown] = useState(false);
+    const mouseCoords = useRef({
+        startX: 0,
+        startY: 0,
+        scrollLeft: 0,
+        scrollTop: 0
+    });
+  const [isScrolling, setIsScrolling] = useState(false);
+    const handleDragStart = (e) => {
+        if (!containers.current) return
+      const slider = containers.current.children[0];
+        const startX = e.pageX - slider.offsetLeft;
+        const startY = e.pageY - slider.offsetTop;
+        const scrollLeft = slider.scrollLeft;
+        const scrollTop = slider.scrollTop;
+        mouseCoords.current = { startX, startY, scrollLeft, scrollTop }
+        setIsMouseDown(true)
+        document.body.style.cursor = "grabbing"
+    }
+    const handleDragEnd = () => {
+        setIsMouseDown(false)
+        if (!containers.current) return
+        document.body.style.cursor = "default"
+    }
+    const handleDrag = (e) => {
+        if (!isMouseDown || ! containers.current) return;
+        e.preventDefault();
+        const slider = containers.current.children[0];
+        const x = e.pageX - slider.offsetLeft;
+        const y = e.pageY - slider.offsetTop;
+        const walkX = (x - mouseCoords.current.startX) * 1.5;
+        const walkY = (y - mouseCoords.current.startY) * 1.5;
+        slider.scrollLeft = mouseCoords.current.scrollLeft - walkX;
+        slider.scrollTop = mouseCoords.current.scrollTop - walkY;
+        console.log(walkX, walkY)
+    }
+
 
   const areachart2 = {
     rangeSelector: {
@@ -425,6 +404,7 @@ export default function SSRfreeHome() {
       })
       .then(data => {
         setnifty(data)
+        console.log(data)
       })
       .catch(error => {
         console.error('Error:', error);
@@ -846,7 +826,23 @@ const logout = () =>{
       const mergedArray = NSEData.concat(BSEData);
       setAllIndex([...AllIndex,...mergedArray])
 
-      
+      if (containers.current) {
+        containers.current.scrollTo(0, Math.random() * 5000);
+      }
+
+      setTopgainers(abc=>{
+        const data = NSEData.slice(5)
+        const box = data.map(kbc=>{
+          return <CustomTable
+              name={kbc.name}
+              price = {kbc.price}
+              close={kbc.close}
+              symbol = {kbc.symbol}
+              isDark={isDark}
+
+          />
+        })
+      })
       
       
       // const observer = new IntersectionObserver(
@@ -907,7 +903,7 @@ const logout = () =>{
           <Dropdown.Menu aria-label="Static Actions">
             <Dropdown.Item key="new"><Button auto light color="default" onClick={abc=>{screener()}}>Screener</Button></Dropdown.Item>
             <Dropdown.Item key="copy"><Button auto light color="default" onClick={abc=>{supercharts()}}>SuperCharts</Button></Dropdown.Item>
-              
+            <Dropdown.Item key="compare"><Button auto light color="default" onClick={abc=>{supercharts()}}>Compare</Button></Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
           <Navbar.Link href="#">Customers</Navbar.Link>
@@ -970,6 +966,7 @@ const logout = () =>{
         <Navbar.Content>
         <Navbar.Item>
           <Switch
+          shadow
           checked={!isDark}
           onChange={(e) => testsetTheme(e.target.checked ? 
             abc=>
@@ -1058,7 +1055,7 @@ const logout = () =>{
 
             <div className='search'>
             <div className='maintitle'>
-                  <h1><b>Stay Ahead with Real-Time Insights and Expert Analysis on India's Financial Landscape</b></h1>
+                  <h1><b>Stay Ahead with Real-Time Insights and Expert Analysis on India's Financial Landscape.</b></h1>
                   </div>
               
                 <div className='subSearch' >
@@ -1078,7 +1075,7 @@ const logout = () =>{
                       {...params} 
                       variant="outlined"
         
-                      label="Search Stock"
+                      label="Are you looking for stocks?"
                       
                       />}
                       renderOption={(props, option) => (
@@ -1097,179 +1094,203 @@ const logout = () =>{
             </div>
      
      
-        
-<div className="boxindices" >
-      <div className="innerboxindices" style={{boxShadow:isDark? "0px 7px 3px rgba(22,27,16,0.5)":"0px 7px 3px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
-              <h4>Nifty 50</h4>
-              <HighchartsReact
-                highcharts={Highcharts}
-                constructorType={'stockChart'}
-                options={areachart1}
-                containerProps={{ style: { height: '150px',width:"300px" } }}
-              /> 
-      </div>
+   <div>
+   
+     <div className="boxindices" {...events} ref={containers}>
 
-      <div className="innerboxindices" style={{boxShadow:isDark? "0px 7px 3px rgba(22,27,16,0.5)":"0px 7px 3px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
-              <h4>Banknifty</h4>
-              <HighchartsReact
-                highcharts={Highcharts}
-                constructorType={'stockChart'}
-                options={areachart2}
-                containerProps={{ style: { height: '150px',width:"300px" } }}
-              /> 
-      </div>
-
-      <div className="innerboxindices" style={{boxShadow:isDark? "0px 7px 3px rgba(22,27,16,0.5)":"0px 7px 3px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
-              <h4>Sensex</h4>
-              <HighchartsReact
-                highcharts={Highcharts}
-                constructorType={'stockChart'}
-                options={areachart3}
-                containerProps={{ style: { height: '150px',width:"300px" } }}
-              /> 
-      </div>
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+        <div className='subinnerboxindices'>
+        <h4>Nifty 50</h4>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
+        </div>
+        <AreaChart
+          isDark={isDark}
+          data = {nifty}
+          type="areaspline"
+          name="Nifty 50"
+          color="#eacda3"
+          darkcolor="#d6ae7b"
+          
+        />
 </div>
-          
-        
-    
-     
-     <div className='indicestitle'>
-        <h1><b>Indices</b></h1>
-        {/* <h2>Counter : {counter}</h2> */}
-     </div>
-    
-    
-      <div className='indices'>
-      <hr></hr>
-      <div className='indiceInfo'>
-            <h1>Nifty 50 - {data1.symbol}</h1>
-                <div className='subindiceInfo'>
-                  <p>High : {data1.high}</p>
-                  <p>Low : {data1.low}</p>
-                  <p>Open : {data1.open}</p>
-                  <p>Close : {data1.prevClose}</p>
-                </div>
-                
-            </div>
 
-        <div className='subindices'> 
-        
-        
-           
-          
-            
-    
-            
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+<div className='subinnerboxindices'>
+        <h4>Banknifty</h4>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
-        <div className='indextable'>
-          {/* <CollapsibleTable data={nifty50Data} itemsPerPage={5} mode={isDark}/> */}
-          <Box sx={{ height: nifty50Data!="" ? "auto" : "500px", width: '100%',color:isDark?"white":"black" }} >
-              <DataGrid
-                  rows={nifty50Data}
-                  columns={columns}
-                  initialState={{
-                  pagination: {
-                      paginationModel: {
-                      pageSize: 5,
-                      
-                      },
-                  },
-                  }}
-                  sx={{
-                      color:isDark?"white":"black"
-                  }}
-                  pageSizeOptions={[5,10, 25,100]}
-                  
-                  disableRowSelectionOnClick
-              />
-          </Box>
-        </div>
-        
-<hr></hr>
-                <div className='indiceInfo2'>
-                 <h1>Nifty Bank - {data2.symbol}</h1> 
-                    <div className='subindiceInfo'>
-                      <p>High : {data2.high}</p>
-                      <p>Low : {data2.low}</p>
-                      <p>Open : {data2.open}</p>
-                      <p>Close : {data2.prevClose}</p>
-                    </div>
-                </div>
-       
-        <div className='subindices2'>
+        <AreaChart
+          isDark={isDark}
+          data = {bank}
+          type="areaspline"
+          name="Bank Nifty"
+          color="#eacda3"
+          darkcolor="#d6ae7b"
+        />
+</div>
 
-                    <div className='subindicesChart'>
-                   <HighchartsReact
-                        highcharts={Highcharts}
-                        constructorType={'stockChart'}
-                        options={areachart2}
-                        containerProps={{ style: { height: '500px' } }}
-                      />  
-           
-          
-                      </div>
-              
-
-                
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+<div className='subinnerboxindices'>
+        <h4>Sensex</h4>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
-        <div className='indextable'>
-          {/* <CollapsibleTable data={bankData} itemsPerPage={11} mode={isDark}/> */}
-          <Box sx={{ height: bankData!="" ? "auto" : "500px", width: '100%',color:isDark?"white":"black" }} >
-              <DataGrid
-                  rows={bankData}
-                  columns={columns}
-                  initialState={{
-                  pagination: {
-                      paginationModel: {
-                      pageSize: 5,
-                      
-                      },
-                  },
-                  }}
-                  sx={{
-                      color:isDark?"white":"black"
-                  }}
-                  pageSizeOptions={[5,10, 25,100]}
-                  
-                  disableRowSelectionOnClick
-              />
-          </Box>
-        </div>
-        <hr></hr>
-        <div className='indiceInfo'>
-            <h1>Sensex - {data3.symbol}</h1>
-                <div className='subindiceInfo'>
-                  <p>High : {data3.high}</p>
-                  <p>Low : {data3.low}</p>
-                  <p>Open : {data3.open}</p>
-                  <p>Close : {data3.prevClose}</p>
-                </div>
-                
-            </div>
-        <div className='subindices'> 
-        
-        
-       
-            <div className='subindicesChart'>
-             <HighchartsReact
-                highcharts={Highcharts}
-                constructorType={'stockChart'}
-                options={areachart3}
-                containerProps={{ style: { height: '500px' } }}
-              />
-              
-              
-            </div>
-     
-           
-          
+        <AreaChart
+          isDark={isDark}
+          data = {sensex}
+          type="areaspline"
+          name="Sensex"
+          color="#eacda3"
+          darkcolor="#d6ae7b"
+        />
+</div>
 
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+<div className='subinnerboxindices'>
+        <h4>Banknifty</h4>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
+        <AreaChart
+          isDark={isDark}
+          data = {bank}
+          type="areaspline"
+          name="Bank Nifty"
+          color="#eacda3"
+          darkcolor="#d6ae7b"
+        />
+</div>
 
-        
-      
-    
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+<div className='subinnerboxindices'>
+        <h4>Banknifty</h4>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
+        </div>
+        <AreaChart
+          isDark={isDark}
+          data = {bank}
+          type="areaspline"
+          name="Bank Nifty"
+          color="#eacda3"
+          darkcolor="#d6ae7b"
+        />
+</div>
+
+
+</div>
+
+
+   </div>
+   <div className='top'>
+      <div className='gainers'>
+        <h3>Gainers</h3>
+                        {topgainers}
+    </div>
+    <div className='gainers'>
+
       </div>
+   </div>
+   
+
+   <div>
+    <h2>Features</h2>
+
+      <div className='screnner'>
+          <div className='screenerimg' >
+            <Image src={isDark? ScreenerDark : ScreenerLight} width={800}></Image>
+            </div>
+        <div className='screenerDes'>
+                    <div>
+                      <h4><u>Introducing Our Powerful Stock Screener.</u></h4>
+                      <p>A robust tool designed to empower you with the ability to navigate the vast world of stocks and investments with ease. Whether you're a seasoned trader or a novice investor, our Screener is your key to informed decision-making.</p>
+                    </div>
+                    <div className='scrennerBoxes'>
+                      <div className='Screenrebox'>
+                        <box-icon name='git-compare' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Fine tuned Comparision</p>
+                        <small>Want to analyze price-to-earnings ratios, dividend yields, or market capitalization? It's all at your fingertips.</small>
+                        </div>
+                        <div className='Screenrebox'>
+                        <box-icon name='brain' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Streamlined Decision-Making</p>
+                        <small>Identify top performers, hidden gems, or stocks that fit specific financial strategies effortlessly.</small>
+                        </div>
+                        <div className='Screenerbox'>
+                        <box-icon name='data' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Bigger and Better</p>
+                        <small>With access to a database of over 3000 stocks spanning across multiple exchanges and categorized into 13 distinct sectors.</small>
+                        </div>
+                        <div className='Screenrebox'>
+                        <box-icon name='recycle' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Stay Informed</p>
+                        <small>Receive instant insights into how stocks are performing and make timely decisions.</small>
+                        </div>
+                    </div>
+          </div>
+      </div>
+
+      <div className='charts'>
+        <div>
+        <div>
+                      <h4><u>Discover the Power of Superchart.</u></h4>
+                      <p>Introducing Superchart, your gateway to the world of dynamic, real-time financial data visualization. Whether you're an experienced trader, a data enthusiast, or simply someone looking to make informed decisions, Superchart is here to transform the way you explore and understand financial markets.</p>
+                    </div>
+             <div className='chartBoxes'>
+                    
+                      <div className='chartbox'>
+                        <box-icon name='cloud-lightning' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Real-Time Data, Real-Time Decisions</p>
+                        <small>Superchart is your window into the heartbeat of the financial world. With real-time data streaming, you can stay ahead of the curve and react swiftly to market changes.</small>
+                        </div>
+                        
+                        <div className='chartbox'>
+                        <box-icon name='cog' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Indicators for Every Strategy</p>
+                        <small>From moving averages to RSI, Bollinger Bands to MACD, our Superchart empowers you with the tools to gauge market sentiment and make well-informed trading decisions.</small>
+                        </div>
+                        <div className='chartbox'>
+                        <box-icon name='line-chart' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Chart Your Course</p>
+                        <small>Whether you lean towards candlestick charts for precision, line charts for simplicity, or OHLC charts for comprehensive insights, Superchart has it all. </small>
+                        </div>
+                        <div className='chartbox'>
+                        <box-icon name='time-five' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
+                        <p>Timeframes That Suit You</p>
+                        <small>Time is of the essence in trading. Superchart offers multiple timeframes, from the granular 1-minute view to the broader daily perspective and everything in between. </small>
+                        </div>
+                    </div>
+        </div>
+                    
+                        <div className='chartimg'>
+                        <Image src={isDark? ChartDark : ChartLight} width={800}></Image>
+                        </div>
+
+                        
+      </div>
+    
+   </div>
+
+{/* <div className='testcontainer' {...events} ref={containers}>
+      <div className='testsubcontainers'>
+        <img src='https://wallpapershome.com/images/wallpapers/windows-11-2560x1440-dark-abstract-microsoft-4k-23470.jpg' width="500px"></img>
+      </div>
+      <div className='testsubcontainers'>
+        <img src='https://wallpapershome.com/images/wallpapers/windows-11-2560x1440-dark-abstract-microsoft-4k-23470.jpg' width="500px"></img>
+      </div>
+      <div className='testsubcontainers'>
+        <img src='https://wallpapershome.com/images/wallpapers/windows-11-2560x1440-dark-abstract-microsoft-4k-23470.jpg' width="500px"></img>
+      </div>
+      <div className='testsubcontainers'>
+        <img src='https://wallpapershome.com/images/wallpapers/windows-11-2560x1440-dark-abstract-microsoft-4k-23470.jpg' width="500px"></img>
+      </div>
+      <div className='testsubcontainers'>
+        <img src='https://wallpapershome.com/images/wallpapers/windows-11-2560x1440-dark-abstract-microsoft-4k-23470.jpg' width="500px"></img>
+      </div>
+      <div className='testsubcontainers'>
+        <img src='https://wallpapershome.com/images/wallpapers/windows-11-2560x1440-dark-abstract-microsoft-4k-23470.jpg' width="500px"></img>
+      </div>
+</div> */}
+     
+        
+
 
 <div className='news'>
     <h1><b>Today&apos;s Headlines</b></h1>
