@@ -153,8 +153,8 @@ app.post('/verify',auth,async(req,res)=>{
         let mailGenerator = new mailgen({
             theme:"default",
             product:{
-                name:"Stock Analysis",
-                link:"https://mailgen.js/"
+                name:"GrowthIn",
+                link:"https://growthin.vercel.app"
             }
         })
 
@@ -163,14 +163,15 @@ app.post('/verify',auth,async(req,res)=>{
         let response = {
             body:{
                 name:getMail.rows[0].user_name,
-                intro:"Click the link to activate your account.",
+                intro:'We are thrilled to welcome you to GrowthIn, your gateway to advanced securities analysis and prediction tools! Your decision to join our community is a significant step towards achieving your financial goals and making informed investment decisions.To get started, we need to verify your account. Please follow the steps below to complete the verification process:',
                 action:{
                     button: {
                         color:"#0072F5",
-                        text:"Verify",
+                        text:"Click to verify",
                         link:"http://localhost:3000/auth/"+activate
                         }
-                    }
+                    },
+                outro:"Note: Please do not share your verification code with anyone, as it is essential for account security. If you did not register for GrowthIn, please disregard this email."
             }
         }
 
@@ -179,7 +180,7 @@ app.post('/verify',auth,async(req,res)=>{
         let message = {
             from:process.env.EMAIL,
             to:getMail.rows[0].email,
-            subject:"Confirm your email",
+            subject:"Welcome to GrowthIn - Verify Your Account",
             html:mail
         }
 

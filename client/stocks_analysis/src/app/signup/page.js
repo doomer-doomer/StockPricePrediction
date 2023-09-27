@@ -35,7 +35,7 @@ const lightTheme = createTheme({
 
 export default function LoginPage(){
 
-
+    
 
     const [isDark, setIsDark] = useState(false);
     const [load,setload]=useState(false)
@@ -124,7 +124,7 @@ export default function LoginPage(){
                     body:JSON.stringify(body)
                 }),{
                     pending:"Creating Account...",
-                    success:"Account created successfully!",
+                    success:"Confirmation Pending",
                     error:"Failed to create account!"
                 })
     
