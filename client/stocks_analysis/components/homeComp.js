@@ -731,6 +731,20 @@ const allNSEData = async()=>{
     console.log("Top 10 Highest Profit Stocks:");
     console.log(gainers);
     setNSEData(mergedData)
+    setTopgainers(abc=>{
+      const data = mergedData.slice(5)
+      const box = data.map(kbc=>{
+        return <CustomTable
+            key={kbc.symbol}
+            name={kbc.name}
+            price = {kbc.price}
+            close={kbc.close}
+            symbol = {kbc.symbol}
+            isDark={isDark}
+
+        />
+      })
+    })
     
   })
   .catch(error => {
@@ -830,19 +844,7 @@ const logout = () =>{
         containers.current.scrollTo(0, Math.random() * 5000);
       }
 
-      setTopgainers(abc=>{
-        const data = NSEData.slice(5)
-        const box = data.map(kbc=>{
-          return <CustomTable
-              name={kbc.name}
-              price = {kbc.price}
-              close={kbc.close}
-              symbol = {kbc.symbol}
-              isDark={isDark}
-
-          />
-        })
-      })
+      
       
       
       // const observer = new IntersectionObserver(
@@ -1055,7 +1057,7 @@ const logout = () =>{
 
             <div className='search'>
             <div className='maintitle'>
-                  <h1><b>Stay Ahead with Real-Time Insights and Expert Analysis on India's Financial Landscape.</b></h1>
+                  <h1><b>Stay Ahead with Real-Time Insights and Expert Analysis on India&apos;s Financial Landscape.</b></h1>
                   </div>
               
                 <div className='subSearch' >
@@ -1195,18 +1197,18 @@ const logout = () =>{
 
       <div className='screnner'>
           <div className='screenerimg' >
-            <Image src={isDark? ScreenerDark : ScreenerLight} width={800}></Image>
+            <Image src={isDark? ScreenerDark : ScreenerLight} width={800} alt='Screener'></Image>
             </div>
         <div className='screenerDes'>
                     <div>
                       <h4><u>Introducing Our Powerful Stock Screener.</u></h4>
-                      <p>A robust tool designed to empower you with the ability to navigate the vast world of stocks and investments with ease. Whether you're a seasoned trader or a novice investor, our Screener is your key to informed decision-making.</p>
+                      <p>A robust tool designed to empower you with the ability to navigate the vast world of stocks and investments with ease. Whether you&apos;re a seasoned trader or a novice investor, our Screener is your key to informed decision-making.</p>
                     </div>
                     <div className='scrennerBoxes'>
                       <div className='Screenrebox'>
                         <box-icon name='git-compare' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
                         <p>Fine tuned Comparision</p>
-                        <small>Want to analyze price-to-earnings ratios, dividend yields, or market capitalization? It's all at your fingertips.</small>
+                        <small>Want to analyze price-to-earnings ratios, dividend yields, or market capitalization? It&apos;s all at your fingertips.</small>
                         </div>
                         <div className='Screenrebox'>
                         <box-icon name='brain' color={isDark ? "#FFFFFF" : "#16181A"} ></box-icon>
@@ -1231,7 +1233,7 @@ const logout = () =>{
         <div>
         <div>
                       <h4><u>Discover the Power of Superchart.</u></h4>
-                      <p>Introducing Superchart, your gateway to the world of dynamic, real-time financial data visualization. Whether you're an experienced trader, a data enthusiast, or simply someone looking to make informed decisions, Superchart is here to transform the way you explore and understand financial markets.</p>
+                      <p>Introducing Superchart, your gateway to the world of dynamic, real-time financial data visualization. Whether you&apos;re an experienced trader, a data enthusiast, or simply someone looking to make informed decisions, Superchart is here to transform the way you explore and understand financial markets.</p>
                     </div>
              <div className='chartBoxes'>
                     
@@ -1260,7 +1262,7 @@ const logout = () =>{
         </div>
                     
                         <div className='chartimg'>
-                        <Image src={isDark? ChartDark : ChartLight} width={800}></Image>
+                        <Image src={isDark? ChartDark : ChartLight} width={800} alt='Chart'></Image>
                         </div>
 
                         
