@@ -13,6 +13,7 @@ import sand from 'highcharts/themes/sand-signika';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
+import {Loading} from '@nextui-org/react';
 import Search from '@mui/icons-material/Search'
 
 import {Dropdown} from "@nextui-org/react"
@@ -53,6 +54,7 @@ import CustomTable from './customTable';
 import AmChartsDemo from './charts/NIfty50';
 import BankNifty from './charts/BankNifty';
 import Sensex from './charts/Sensex';
+import GeneralChart from './charts/GeneralChart';
 
 const HighchartsReact = dynamic(() => import('highcharts-react-official'), {
   ssr: false, // This disables SSR for this component
@@ -100,6 +102,10 @@ export default function SSRfreeHome() {
   const [privateBankData,setprivateBankData] = useState([])
   const [realtyData,setrealtyData] = useState([])
 
+  const [niftyIT,setNiftyIT] = useState([])
+  const [niftyFinService,setniftyFinService] = useState([])
+
+
   const [NSEData,setNSEData] = useState([])
   const [BSEData,setBSEData] = useState([])
   const [AllIndex,setAllIndex]=useState(NSEData.concat(BSEData))
@@ -143,39 +149,12 @@ export default function SSRfreeHome() {
     user_name:"",
     email:""
   })
-
-  const [chartVisible, setChartVisible] = useState(false);
-  const [chartVisible2, setChartVisible2] = useState(false);
-  const [chartVisible3, setChartVisible3] = useState(false);
-
-  const handleVisibilityChange = (isVisible) => {
-    if (isVisible && !chartVisible && nifty.length>0 ) {
-      setChartVisible(true);
-    }
-  };
-
-  const handleVisibilityChange2 = (isVisible) => {
-    if (isVisible && !chartVisible2 && bank.length>0) {
-      setChartVisible2(true);
-    }
-  };
-
-  const handleVisibilityChange3 = (isVisible) => {
-    if (isVisible && !chartVisible3 && sensex.length>0) {
-      setChartVisible3(true);
-    }
-  };
-
-
-
-
   const [isDark, setIsDark] = useState(false);
   const [testtheme, testsetTheme] = useState('light');
   const containers = useRef();
   const { events } = useDraggable(containers);
 
   const [load,setload] = useState(false)
-  const [selected, setSelected] = React.useState(new Set(["Select a Stock"]));
 
   const handleChange = (e,value)=>{
     //e.preventDefault();
@@ -445,6 +424,39 @@ export default function SSRfreeHome() {
       .catch(error => {
         console.error('Error:', error);
       });
+
+      await fetch(yfinanceURL+"/longhistory/^CNXIT/max/1d",{method:"GET"})
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Request failed:', response.status);
+        }
+      })
+      .then(data => {
+        setNiftyIT(data)
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+      await fetch(yfinanceURL+"/longhistory/NIFTY_FIN_SERVICE.NS/max/1d",{method:"GET"})
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Request failed:', response.status);
+        }
+      })
+      .then(data => {
+        setniftyFinService(data)
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
     
       
   }
@@ -1114,12 +1126,13 @@ const logout = () =>{
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
         <div className='innerboxchart'>
-        {nifty.length>0 ?          <AmChartsDemo
+        {nifty.length>0 ?          <GeneralChart
                           data={nifty}
-                          name="Bank Nifty"
+                          name="Nifty 50"
                           isDark = {isDark}
                           height="280px"
-                        /> : <p>Loading..</p>}
+                          uniqueID="1"
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
           </div>
         
 </div>
@@ -1127,15 +1140,16 @@ const logout = () =>{
 <div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
 <div className='subinnerboxindices'>
         <h4>Banknifty</h4>
-        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEBANK')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
         <div className='innerboxchart'>
-        {bank.length>0 ?          <BankNifty
+        {bank.length>0 ?          <GeneralChart
                           data={bank}
                           name="Bank Nifty"
                           isDark = {isDark}
                           height="280px"
-                        /> : <p>Loading..</p>}
+                          uniqueID="2"
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
           </div>
 </div>
 
@@ -1145,43 +1159,48 @@ const logout = () =>{
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
         <div className='innerboxchart'>
-        {sensex.length>0 ?          <Sensex
+        {sensex.length>0 ?          <GeneralChart
                           data={sensex}
+                          name="Sensex"
+                          isDark = {isDark}
+                          height="280px"
+                          uniqueID="3"
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+          </div>
+</div>
+
+
+
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+<div className='subinnerboxindices'>
+        <h4>Nifty IT</h4>
+        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
+        </div>
+        <div className='innerboxchart'>
+        {niftyIT.length>0 ?          <GeneralChart
+                          data={niftyIT}
                           name="Bank Nifty"
                           isDark = {isDark}
                           height="280px"
-                        /> : <p>Loading..</p>}
+                          uniqueID="5"
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
           </div>
 </div>
 
 <div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
 <div className='subinnerboxindices'>
-        <h4>Banknifty</h4>
+        <h4>Nifty Fin Serv</h4>
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
-        <AreaChart
-          isDark={isDark}
-          data = {bank}
-          type="areaspline"
-          name="Bank Nifty"
-          color="#eacda3"
-          darkcolor="#d6ae7b"
-        />
-</div>
-
-<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
-<div className='subinnerboxindices'>
-        <h4>Banknifty</h4>
-        <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
-        </div>
-        <AreaChart
-          isDark={isDark}
-          data = {bank}
-          type="areaspline"
-          name="Bank Nifty"
-          color="#eacda3"
-          darkcolor="#d6ae7b"
-        />
+        <div className='innerboxchart'>
+        {niftyFinService.length>0 ?          <GeneralChart
+                          data={niftyFinService}
+                          name="Bank Nifty"
+                          isDark = {isDark}
+                          height="280px"
+                          uniqueID="6"
+                        /> :  <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+          </div>
 </div>
 
 

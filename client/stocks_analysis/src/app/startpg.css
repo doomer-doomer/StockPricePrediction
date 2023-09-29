@@ -162,10 +162,12 @@
   z-index: 10;
   flex: none;
   width:350px;
+  height: 230px;
   border:none;
   border-radius: 10px;
   padding: 20px;
   margin-left: 30px;
+  margin-bottom: 10px;
   overflow: hidden;
   position: relative;
 }

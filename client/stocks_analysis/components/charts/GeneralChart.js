@@ -7,12 +7,12 @@ import * as am5stock from "@amcharts/amcharts5/stock";
 
 let stockChart;
 
-class AmChartsDemo extends Component {
+class GeneralChart extends Component {
     
     
   componentDidMount() {
 
-    const { data, name } = this.props;
+    const { data, name,uniqueID, isDark } = this.props;
 
     const processedData = data.map(item => ({
         ...item,
@@ -20,7 +20,7 @@ class AmChartsDemo extends Component {
       }));
 
     
-        let root = am5.Root.new("chartdiv");
+        let root = am5.Root.new(`${uniqueID}`);
 
     root.setThemes([
       am5themes_Animated.new(root)
@@ -54,7 +54,7 @@ class AmChartsDemo extends Component {
         ]
       });
       
-      let valueSeries = mainPanel.series.push(am5xy.LineSeries.new(root, {
+      let valueSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
         name: name,
         valueXField: "Date",
         valueYField:"Close",
@@ -65,13 +65,16 @@ class AmChartsDemo extends Component {
         yAxis: valueAxis,
         showCandles:true,
         calculateAggregates: true,
-
+        stroke: "#74ee15",
+        grid:"#74ee15",
+        text:"#74ee15"
         //legendValueText: "Open: {openValueY}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}",
         //tooltipText:"Open: {openValueYField}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}"
       }));
     
     valueSeries.data.setAll(processedData);
-
+      root.interfaceColors.set("grid",am5.color("#74ee15"))
+      root.interfaceColors.set("text",am5.color("#74ee15"))
     
  
     // let valueLegend = mainPanel.plotContainer.children.push(am5stock.StockLegend.new(root, {
@@ -196,15 +199,15 @@ class AmChartsDemo extends Component {
   }
 
   render() {
-    const {isDark, height} = this.props
+    const {isDark, height,uniqueID} = this.props
     return (
         <div>
 <div id="chartcontrols" ></div>
-      <div id="chartdiv" style={{ width: "100%", height: height, color: isDark ? "#FFFFFF" : "black"}}></div>
+      <div id={uniqueID} style={{ width: "100%", height: height, color: isDark ? "#FFFFFF" : "black"}}></div>
         </div>
         
     );
   }
 }
 
-export default AmChartsDemo;
+export default GeneralChart;
