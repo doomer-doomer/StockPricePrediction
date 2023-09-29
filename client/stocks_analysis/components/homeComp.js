@@ -51,9 +51,6 @@ import columns from '../src/app/columns';
 import { DataGrid,GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import CustomTable from './customTable';
-import AmChartsDemo from './charts/NIfty50';
-import BankNifty from './charts/BankNifty';
-import Sensex from './charts/Sensex';
 import GeneralChart from './charts/GeneralChart';
 
 const HighchartsReact = dynamic(() => import('highcharts-react-official'), {
