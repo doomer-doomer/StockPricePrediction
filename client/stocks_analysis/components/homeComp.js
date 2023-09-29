@@ -50,6 +50,9 @@ import columns from '../src/app/columns';
 import { DataGrid,GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import CustomTable from './customTable';
+import AmChartsDemo from './charts/NIfty50';
+import BankNifty from './charts/BankNifty';
+import Sensex from './charts/Sensex';
 
 const HighchartsReact = dynamic(() => import('highcharts-react-official'), {
   ssr: false, // This disables SSR for this component
@@ -419,6 +422,7 @@ export default function SSRfreeHome() {
         }
       })
       .then(data => {
+        console.log(data)
         setbank(data)
         
       })
@@ -568,6 +572,7 @@ export default function SSRfreeHome() {
         obj.id = i++
         obj.change = (((obj.currentPrice-obj.previousClose)/obj.previousClose)*100).toFixed(2)
       })
+      console.log(mydata)
      setbankData(mydata)
     }
     
@@ -811,15 +816,6 @@ const logout = () =>{
   
 
   useEffect(()=>{
-    if (typeof window !== 'undefined') {
-      if(localStorage.getItem("theme")==="true"){
-        setIsDark(true)
-      }else if(localStorage.getItem("theme")==="false"){
-        setIsDark(false)
-      }else{
-        return
-      }
-    }
 
     if (typeof window !== 'undefined') {
       if(localStorage.getItem("sessionToken")!=="" ){
@@ -863,6 +859,18 @@ const logout = () =>{
       // document.body.className = testtheme;
         
       
+  },[])
+
+  useEffect(()=>{
+    if (typeof window !== 'undefined') {
+      if(localStorage.getItem("theme")==="true"){
+        setIsDark(true)
+      }else if(localStorage.getItem("theme")==="false"){
+        setIsDark(false)
+      }else{
+        return
+      }
+    }
   },[isDark])
 
   const collapseItems = [
@@ -1105,15 +1113,15 @@ const logout = () =>{
         <h4>Nifty 50</h4>
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
-        <AreaChart
-          isDark={isDark}
-          data = {nifty}
-          type="areaspline"
-          name="Nifty 50"
-          color="#eacda3"
-          darkcolor="#d6ae7b"
-          
-        />
+        <div className='innerboxchart'>
+        {nifty.length>0 ?          <AmChartsDemo
+                          data={nifty}
+                          name="Bank Nifty"
+                          isDark = {isDark}
+                          height="280px"
+                        /> : <p>Loading..</p>}
+          </div>
+        
 </div>
 
 <div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
@@ -1121,14 +1129,14 @@ const logout = () =>{
         <h4>Banknifty</h4>
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
-        <AreaChart
-          isDark={isDark}
-          data = {bank}
-          type="areaspline"
-          name="Bank Nifty"
-          color="#eacda3"
-          darkcolor="#d6ae7b"
-        />
+        <div className='innerboxchart'>
+        {bank.length>0 ?          <BankNifty
+                          data={bank}
+                          name="Bank Nifty"
+                          isDark = {isDark}
+                          height="280px"
+                        /> : <p>Loading..</p>}
+          </div>
 </div>
 
 <div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
@@ -1136,14 +1144,14 @@ const logout = () =>{
         <h4>Sensex</h4>
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
         </div>
-        <AreaChart
-          isDark={isDark}
-          data = {sensex}
-          type="areaspline"
-          name="Sensex"
-          color="#eacda3"
-          darkcolor="#d6ae7b"
-        />
+        <div className='innerboxchart'>
+        {sensex.length>0 ?          <Sensex
+                          data={sensex}
+                          name="Bank Nifty"
+                          isDark = {isDark}
+                          height="280px"
+                        /> : <p>Loading..</p>}
+          </div>
 </div>
 
 <div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
@@ -1185,6 +1193,7 @@ const logout = () =>{
       <div className='gainers'>
         <h3>Gainers</h3>
                         {topgainers}
+
     </div>
     <div className='gainers'>
 

@@ -167,12 +167,23 @@
   padding: 20px;
   margin-left: 30px;
   overflow: hidden;
- 
+  position: relative;
 }
 
 .subinnerboxindices{
+
   display: flex;
   justify-content: space-between;
+  position: relative;
+}
+
+.innerboxchart{
+  position: absolute;
+  top: 0;
+  left: 0; /* Position the child at the left edge of the parent */
+  right: 0; /* Position the child at the right edge of the parent */
+  bottom: 0;
+  
 }
 
 .timedetails{
@@ -244,6 +255,9 @@
     object-fit: cover;
     width: 800px;
   }
+
+ 
+
   .startpage .search{
     display: block;
     justify-content: center;
