@@ -12,7 +12,7 @@ class GeneralChart extends Component {
     
   componentDidMount() {
 
-    const { data, name,uniqueID, isDark } = this.props;
+    const { data, name,uniqueID, isDark, strokeWidth } = this.props;
 
     const processedData = data.map(item => ({
         ...item,
@@ -47,13 +47,6 @@ class GeneralChart extends Component {
         renderer: am5xy.AxisRendererX.new(root, {})
       }));
 
-      let gradient = am5.LinearGradient.new(root, {
-        stops: [
-          { color: am5.color(0xff621f) },
-          { color: am5.color(0x946b49) }
-        ]
-      });
-      
       let valueSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
         name: name,
         valueXField: "Date",
@@ -66,16 +59,19 @@ class GeneralChart extends Component {
         showCandles:true,
         calculateAggregates: true,
         stroke: "#74ee15",
-        grid:"#74ee15",
-        text:"#74ee15"
-        //legendValueText: "Open: {openValueY}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}",
+
+    
+        legendValueText: "Open: {openValueY}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}",
         //tooltipText:"Open: {openValueYField}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}"
       }));
     
     valueSeries.data.setAll(processedData);
       root.interfaceColors.set("grid",am5.color("#74ee15"))
       root.interfaceColors.set("text",am5.color("#74ee15"))
-    
+
+      valueSeries.strokes.template.setAll({
+        strokeWidth: strokeWidth
+      });
  
     // let valueLegend = mainPanel.plotContainer.children.push(am5stock.StockLegend.new(root, {
     //     stockChart: stockChart

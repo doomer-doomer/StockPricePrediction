@@ -18,7 +18,7 @@ import accumdis from 'highcharts/indicators/accumulation-distribution'
 import VisibilitySensor from 'react-visibility-sensor';
 import { Skeleton } from '@mui/material';
 
-import { NextUIProvider } from '@nextui-org/react';
+import { Loading, NextUIProvider } from '@nextui-org/react';
 import { Grid, Switch } from "@nextui-org/react";
 import { SunIcon } from './sun';
 import { MoonIcon } from './moon';
@@ -39,6 +39,7 @@ import { Helmet } from 'react-helmet';
 import "./data.css"
 import './newscss.css'
 import Newsbox from './newsbox';
+import GeneralChart from '../../../../components/charts/GeneralChart';
 
 const lightTheme = createTheme({
   type: 'light',
@@ -1004,15 +1005,7 @@ export default function SingleStock(){
       //setnewchart(abc=>candlestick("ema","macd","stochastic"))
       //setnewchart(abc=>candlestick())
       console.log(localStorage.getItem("theme"))
-      if (typeof window !== 'undefined') {
-      if(localStorage.getItem("theme")==="true"){
-        setIsDark(true)
-      }else if(localStorage.getItem("theme")==="false"){
-        setIsDark(false)
-      }else{
-        return
-      }
-    }
+      
 
     if (typeof window !== 'undefined') {
       if(localStorage.getItem("sessionToken")!=="" ){
@@ -1061,7 +1054,19 @@ export default function SingleStock(){
       }
     
 
-  },[price,isDark])
+  },[isDark])
+
+  useEffect(()=>{
+    if (typeof window !== 'undefined') {
+      if(localStorage.getItem("theme")==="true"){
+        setIsDark(true)
+      }else if(localStorage.getItem("theme")==="false"){
+        setIsDark(false)
+      }else{
+        return
+      }
+    }
+  },[isDark])
 
  
 
@@ -1078,8 +1083,7 @@ export default function SingleStock(){
       }}
     >
       <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
-   
-      
+  
       <div className='totalscriptpage'>
       <Navbar shouldHideOnScroll isBordered variant={"static"} css={{width:"100%", backgroundColor:"$background"}}>
       <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
@@ -1244,12 +1248,35 @@ export default function SingleStock(){
           </Navbar.CollapseItem>
       </Navbar.Collapse>
       </Navbar>
-        <div className='alldata'>
+     
+     <div className='superchart'>
+     <Avatar squared size="md" onClick={abc=>travelSpecific('^NSEBANK')} icon={<box-icon name='link-external' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
+
+      </div>
+      <div className='topmainchart' >
+      {alldata.length> 0 ? 
+          <GeneralChart 
+          uniqueID = "7"
+          data= {alldata}
+          name="Nifty 50"
+          isDark = {isDark}
+          height="700px"
+          strokeWidth="2"
+          /> :
+          <div style={{width:"100%", height:"100vh", display:'flex',justifyContent:'center',alignItems:"center"}}>
+            <Loading size='lg' color="success"></Loading>
+            </div>  
+        }
+      </div>
+
+      <div className='mainscriptdata'>
+        <div className='innermainscriptdata'>
          
-          <div className='stockinfo'>
-         
-            <div className='substockinfo'>
-              <h2>{scriptAllData.longName} ({scriptAllData.symbol})</h2>
+         <div style={{display:"flex"}}>
+         <h2>{scriptAllData.longName}.</h2>
+
+         </div>
+          
               <h1 className='price' ref={col}><b>₹{price}</b></h1>
               <div className='profit'>
                 {load2 ? <div><Image src={up}></Image></div> : <div><Image src={down}></Image></div>}
@@ -1257,85 +1284,33 @@ export default function SingleStock(){
               <h2> {(((price - scriptAllData.prevClose)/scriptAllData.prevClose)*100).toFixed(2)}%</h2>
               
               </div>
-             
-              <div className='subinfo'>
-              <li>Previous Close: {(scriptAllData.prevClose)?.toLocaleString('en-US')}</li>
-              <li>Range: {(scriptAllData.dayLow)?.toLocaleString('en-US')} - {(scriptAllData.dayHigh).toLocaleString('en-US')}</li>
-              <li>Volume: {(scriptAllData.volume)?.toLocaleString('en-US')}</li>
-              <li>Market Cap: {(scriptAllData.marketCap)?.toLocaleString('en-US')}</li>
-              <li>PE Ratio: {(scriptAllData.pe)?.toLocaleString('en-US')}</li>
-              <li>52 week range: {(scriptAllData.fiftyTwoWeekLow)?.toLocaleString('en-US')} - {(scriptAllData.fiftyTwoWeekHigh)?.toLocaleString('en-US')}</li>
-              </div>
-            </div>
-          
-            
-
-          <br></br>
-
-          
-           
-            
-          </div>
-
-          <div className='charts'>
-            <div className='areachart'>
-            
-                <div className='subindicesChart'>
-                {chartVisible ? <HighchartsReact
-                    
-                    highcharts={Highcharts}
-                    constructorType={'stockChart'}
-                    options={areachart}
-                    containerProps={{ style: { height: '550px' } }}
-                  /> : 
-                  <Skeleton animation='wave' variant="rounded" width={1800} height={500} />
-                  }
-                  
-                  
-                    </div>
-            
-                   
-              </div>
-             
-          
-
-
-
-            
-
-
-            </div>
-            
-            
-
-           
-            
-
-            {/* <div className='data'>
-            {Array.isArray(alldata) ? 
-            (alldata.map(data => (
-                <div key={data.Date}>
-                <p>Date: {data.Date}</p>
-                <p>Open: {data.Open}</p>
-                <p>High: {data.High}</p>
-                <p>Low: {data.Low}</p>
-                <p>Close: {data.Close}</p>
-                <p>Volume: {data.Volume}</p>
-                </div>
-                 )))
-                 :
-                 (<p>Loading....</p>)}
-            </div> */}
-
          
-    
-
-           
-            
+          
         
+       
         </div>
+     
+      </div>
+
+      <br></br>
+      <br></br>
+<br></br>
+<br></br>
+
+      <h3><b>Summary</b></h3>
+      <div className='subinfo'>
+        
+              <p>Previous Close: {(scriptAllData.prevClose)?.toLocaleString('en-US')}</p>
+              <p>Range: {(scriptAllData.dayLow)?.toLocaleString('en-US')} - {(scriptAllData.dayHigh).toLocaleString('en-US')}</p>
+              <p>Volume: {(scriptAllData.volume)?.toLocaleString('en-US')}</p>
+              <p>PE Ratio: {(scriptAllData.pe)?.toLocaleString('en-US')}</p>
+              <p>52 week range: {(scriptAllData.fiftyTwoWeekLow)?.toLocaleString('en-US')} - {(scriptAllData.fiftyTwoWeekHigh)?.toLocaleString('en-US')}</p>
+              <p>Cap: {(scriptAllData.marketCap)?.toLocaleString('en-US')}</p>
+              </div>
+    
+    
         <div className='about' ref={about}>
-                <h1><b>About</b></h1>
+                <h3><b>About</b></h3>
                 <hr></hr>
                 <div className='subabout'>
                 <li>Address: {scriptAllData.addrA} / {scriptAllData.addrB}</li>

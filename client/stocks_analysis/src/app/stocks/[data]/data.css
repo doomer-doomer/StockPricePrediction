@@ -1,9 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600&display=swap');
 
 
+.topmainchart{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
 
-.totalscriptpage{
-   
+.superchart{
+  position: absolute;
+  right: 20px;
+  top: 100px;
+
+}
+
+.innermainscriptdata{
+  display: block;
+  width: 100%;
+  margin-left: 10px;
+  padding: 10px;
+}
+
+
+.mainscriptdata{
+  display: flex;
+  width: 100%;
+   margin-top: 320px;
+   margin-left: 10px;
+  
 }
 
 .analysisContent{
@@ -19,6 +45,7 @@
 }
 
 .alldata{
+
     display: block;
     grid-template-columns: 1fr 1.5fr;
     column-gap: 40px;
@@ -26,9 +53,12 @@
     
 }
 
+.mainscriptdata{
+  z-index: 2;
+}
 .subinfo{
     display: grid;
-    grid-template-columns: 0.2fr 0.2fr;
+    grid-template-columns: 0.5fr 0.5fr;
     row-gap: 0px;
     margin-top: 10px;
 }

@@ -1129,7 +1129,7 @@ const logout = () =>{
                           isDark = {isDark}
                           height="280px"
                           uniqueID="1"
-                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
         
 </div>
@@ -1146,7 +1146,7 @@ const logout = () =>{
                           isDark = {isDark}
                           height="280px"
                           uniqueID="2"
-                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
 </div>
 
@@ -1162,7 +1162,7 @@ const logout = () =>{
                           isDark = {isDark}
                           height="280px"
                           uniqueID="3"
-                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
 </div>
 
@@ -1180,7 +1180,7 @@ const logout = () =>{
                           isDark = {isDark}
                           height="280px"
                           uniqueID="5"
-                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+                        /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
 </div>
 
@@ -1196,7 +1196,7 @@ const logout = () =>{
                           isDark = {isDark}
                           height="280px"
                           uniqueID="6"
-                        /> :  <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading size="md"/></div>}
+                        /> :  <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
 </div>
 
