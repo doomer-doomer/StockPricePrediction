@@ -5,6 +5,7 @@ import up from '../[data]/arrow-up.png'
 import down from '../[data]/down.png'
 import nopic from '../[data]/nopic.png'
 import "boxicons"
+import { useRouter } from 'next/navigation';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 import Highcharts from 'highcharts/highstock';
@@ -61,6 +62,7 @@ const darkTheme = createTheme({
 
 export default function SingleStock(){
 
+    const router = useRouter()
     var axios = require('axios');
     const pathname = usePathname();
     const [scriptname,setscriptname] = useState("");
@@ -235,6 +237,9 @@ export default function SingleStock(){
     };
     //const barlabels = [...somedata.map(data=>data.Date),currdate.slice(0,10)]
 
+    function travelSpecific(e){
+      router.push(`/stocks/chart/${e}`)
+    }
   const areachart = {
     chart:{
       style:{

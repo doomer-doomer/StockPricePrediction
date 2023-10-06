@@ -36,7 +36,13 @@ class ScriptChart extends Component {
       }));
 
       let valueAxis = mainPanel.yAxes.push(am5xy.ValueAxis.new(root, {
-        renderer: am5xy.AxisRendererY.new(root, {})
+        renderer: am5xy.AxisRendererY.new(root, {
+          pan:'zoom'
+        }),
+        extraMin: 0.1, // adds some space for for main series
+        tooltip: am5.Tooltip.new(root, {}),
+        numberFormat: "#,###.00",
+        extraTooltipPrecision: 2
       }));
       
       let dateAxis = mainPanel.xAxes.push(am5xy.GaplessDateAxis.new(root, {
@@ -44,7 +50,8 @@ class ScriptChart extends Component {
           timeUnit: "day",
           count: 1
         },
-        renderer: am5xy.AxisRendererX.new(root, {})
+        renderer: am5xy.AxisRendererX.new(root, {}),
+        tooltip: am5.Tooltip.new(root, {})
       }));
 
       let valueSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
@@ -66,7 +73,6 @@ class ScriptChart extends Component {
     valueSeries.data.setAll(processedData);
       root.interfaceColors.set("grid",am5.color("#74ee15"))
       root.interfaceColors.set("text",am5.color("#74ee15"))
-      
       valueSeries.strokes.template.setAll({
         strokeWidth: strokeWidth
       });
@@ -181,6 +187,9 @@ class ScriptChart extends Component {
     //   });
       
       //sbSeries.data.setAll(processedData);
+
+  
+      
     
 
     
