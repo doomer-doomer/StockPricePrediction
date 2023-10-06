@@ -40,6 +40,7 @@ import "./data.css"
 import './newscss.css'
 import Newsbox from './newsbox';
 import GeneralChart from '../../../../components/charts/GeneralChart';
+import ScriptChart from '../../../../components/charts/ScriptChart';
 
 const lightTheme = createTheme({
   type: 'light',
@@ -1085,7 +1086,7 @@ export default function SingleStock(){
       <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
   
       <div className='totalscriptpage'>
-      <Navbar shouldHideOnScroll isBordered variant={"static"} css={{width:"100%", backgroundColor:"$background"}}>
+      <Navbar shouldHideOnScroll isBordered variant={"floating"} css={{width:"100%", backgroundColor:"$background"}}>
       <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
       <Navbar.Brand>
         <box-icon name='trending-up' color='#1aae30' ></box-icon>
@@ -1255,12 +1256,12 @@ export default function SingleStock(){
       </div>
       <div className='topmainchart' >
       {alldata.length> 0 ? 
-          <GeneralChart 
+          <ScriptChart 
           uniqueID = "7"
           data= {alldata}
           name="Nifty 50"
           isDark = {isDark}
-          height="700px"
+          height="650px"
           strokeWidth="2"
           /> :
           <div style={{width:"100%", height:"100vh", display:'flex',justifyContent:'center',alignItems:"center"}}>

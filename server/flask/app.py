@@ -1,24 +1,21 @@
-from flask import Flask,jsonify,request,send_file,Response
-import requests
+from flask import Flask,jsonify,Response
 from flask_cors import CORS
-import logging
 import json
+import requests
 import time
 import numpy as np
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import ProcessPoolExecutor
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from pathlib import Path
 import os.path
 from selenium.webdriver.common.by import By
-from datetime import datetime
+from datetime import datetime,timedelta
 import pytz
 import yfinance as yf
-import csv
-import threading
+from tensorflow import keras
 import concurrent.futures
 import numpy as np
 import gzip
@@ -132,17 +129,207 @@ def nifty50(period,time):
         repair = True)
     return x
 
+def create_features(data):
+    data.sort(key=lambda x: x['Date'])
+
+    close_prices = pd.Series([entry['Close'] for entry in data])
+    for i in range(len(data)):
+        close = data[i].get('Close', 0)
+        high = data[i].get('High', 0)
+        low = data[i].get('Low', 0)
+        open_price = data[i].get('Open', 0)
+        volume = data[i].get('Volume', 0)
+
+        data[i]['MA_9'] = compute_moving_average(close_prices, window=9)
+        data[i]['MA_21'] = compute_moving_average(close_prices, window=21)
+
+        data[i]['RSI'] = compute_rsi(close_prices, window=9)
+
+        date_str = data[i].get('Date')
+        if date_str:
+            date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+            day_of_week = date_obj.weekday()
+            month = date_obj.month
+            quarter = (month - 1) // 3 + 1
+
+            data[i]['DayOfWeek'] = day_of_week
+            data[i]['Month'] = month
+            data[i]['Quarter'] = quarter
+
+    return data
+
+def compute_rsi(close_prices, window=9):
+
+    close_series = pd.Series(close_prices)
+
+    delta = close_series.diff()
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+
+    avg_gain = gain.rolling(window=window).mean()
+    avg_loss = loss.rolling(window=window).mean()
+
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi.iloc[-1]
+
+
+def prepare_data(data, lookback_window=30):
+    X, y = [], []
+    for i in range(len(data) - lookback_window):
+        X.append(data[i:i + lookback_window])
+        y.append(data[i + lookback_window]['Close'])
+    return np.array(X), np.array(y)
+
+def compute_moving_average(close_prices, window=5):
+    ma = close_prices[-window:].mean()
+    return ma
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def calculate_sigmoid_macd(data, short_window=12, long_window=26, signal_window=9):
+    short_ema = data.ewm(span=short_window, adjust=False).mean()
+    long_ema = data.ewm(span=long_window, adjust=False).mean()
+
+    macd_line = short_ema - long_ema
+    signal_line = macd_line.ewm(span=signal_window, adjust=False).mean()
+    macd_histogram = macd_line - signal_line
+
+    sigmoid_macd_line = sigmoid(macd_line)
+    sigmoid_signal_line = sigmoid(signal_line)
+
+    return sigmoid_macd_line, sigmoid_signal_line
+
+def get_historical_data(historical_data):
+    if historical_data is not None:
+        historical_json = []
+        for index, row in historical_data.iterrows():
+            date_str = row["Date"].strftime("%Y-%m-%d")
+            data_object = {
+                "Date": date_str,
+                "Open": row["Open"],
+                "High": row["High"],
+                "Low": row["Low"],
+                "Close": row["Close"],
+                "Volume": row["Volume"],
+                "Adj Close": row["Adj Close"]
+            }
+            historical_json.append(data_object)
+
+        historical_json_string = json.dumps(historical_json, indent=4)
+        with open("historical_data.json", "w") as json_file:
+            json_file.write(historical_json_string)
+
+        return historical_json_string  
+    else:
+        print("No data available.")
+
+
+def data_processing(data):
+    lowest_close = min(data, key=lambda x: x['Close'])['Close']
+    highest_close = max(data, key=lambda x: x['Close'])['Close']
+
+    json_data = []
+    for row in data:
+        json_data.append({
+            'Close':row["Close"],
+            # 'High':row["High"],
+            # 'Low':row["Low"],
+            # 'Open':row['Open']
+        })
+
+
+    stock_data = create_features(data)
+
+    pdData = pd.DataFrame(stock_data)
+
+    with_rsi = []
+
+    rsi_with_date=[]
+    close_prices = pd.Series([entry['Close'] for entry in data])
+    volume = pd.Series([entry['Volume'] for entry in data])
+    date = pd.Series([entry['Date']for entry in data])
+    results_df = pd.DataFrame(columns=['Close', 'RSI','Volume'])
+
+
+    for i in range(len(close_prices) - 9):
+        current_sequence = close_prices[i:i + 9]
+        current_date = date[i+8]
+        current_rsi = compute_rsi(current_sequence, window=9)
+        rsi_value = current_rsi
+        ma9 = compute_moving_average(current_sequence, window=9)
+        ma9_val = ma9
+        sigmoid_macd_line,sigmoid_macd_signal = calculate_sigmoid_macd(close_prices,short_window=12, long_window=26, signal_window=9)
+        line = sigmoid_macd_line
+        signal = sigmoid_macd_signal
+        close_price = current_sequence
+
+        with_rsi.append({
+            'RSI': round(rsi_value/100, 2),
+            })
+        rsi_with_date.append({
+            "Date": current_date,
+            'RSI': round(rsi_value/100, 2)
+        })
+
+    features = ["RSI"]
+
+    json_data = json.dumps(rsi_with_date)  
+    dataset = []
+    for entry in with_rsi:
+            sample = []
+            for feature in features:
+                value = entry.get(feature)
+                if value is None:
+                    sample.append(0)
+                else:
+                    sample.append(value)
+            dataset.append(sample)
+    dataset = np.array(dataset)
+    return dataset,json_data 
+
+def spliting_data_test(data):
+    n_steps = 5
+
+    X = []
+    y = []
+
+    for i in range(n_steps, len(data)):
+        X.append(data[i+1 - n_steps:i+1])
+        y.append(data[i])
+
+    X = np.array(X)
+    y = np.array(y)
+
+    split_ratio = 0.9
+    split_index = int(split_ratio * len(X))
+
+    X_train = X[:split_index]
+    y_train = y[:split_index]
+    X_val = X[split_index:]
+    y_val = y[split_index:]
+    return X_val,y_val
+
+def spliting_data_val(data):
+    steps = 5
+
+    z = []
+    for i in range(steps, len(data)):
+        z.append(data[i+1 - steps:i+1])
+
+    z = np.array(z)
+    return z
+
 @app.route("/longhistory/<script>/<period>/<time>",methods=["GET"])
 def longinterval(script,period,time):
     downloads_path = str(Path.home() / "Downloads")
     path = r"{}\{}.csv".format(downloads_path,script)
     jsonpath = r"{}\{}.json".format(downloads_path,script)
-   
     
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.submit(download, script,period,time)
         result = future.result()
-    
  
     df = pd.DataFrame(result)
     df['Growth'] = df['Close'].pct_change() * 100
@@ -239,6 +426,103 @@ def information(script):
 
     return response
 
+@app.route("/rsiPredictions/<script>",methods=['GET'])
+def getRSIPredictions(script):
+        maxData = download(script,"max",'1d')
+        maxData.reset_index(inplace=True) 
+        x = get_historical_data(maxData)
+
+        f = open('historical_data.json')
+        maxData = json.load(f)
+        # maxData = download(script,"max","1d")
+        # maxData.reset_index(inplace=True)
+        #df = pd.DataFrame(maxData)
+        # jsonMaxData = df.to_json(orient='records')
+
+        # data_without_escape = jsonMaxData.replace("\\", "")
+
+        # json_data = json.loads(data_without_escape)
+         
+        middle = len(maxData) // 2 
+
+        first_half = maxData[:middle]
+        second_half = maxData[middle:]
+
+        split_ratio = 0.9
+        first_split_index = int(split_ratio * len(first_half))
+        second_split_index = int(split_ratio * len(second_half))
+
+        first_train_data = first_half[:first_split_index]
+        first_val_data = first_half[first_split_index:]
+
+        second_train_data = second_half[:second_split_index]
+        second_val_data = second_half[second_split_index:]
+
+        latest_15_days = second_half[-15:]
+        
+        first_half_proccesed_data,first_half_RSI = data_processing(first_half)
+        second_half_proccesed_data,second_half_RSI = data_processing(second_half)
+        latest_15_days_proccesed_data,latest_RSI = data_processing(latest_15_days)
+       
+        first_split_X_val,first_split_y_val = spliting_data_test(first_half_proccesed_data)
+        second_split_X_val,second_split_y_val = spliting_data_test(second_half_proccesed_data)
+        latest_15_days_z_val = spliting_data_val(latest_15_days_proccesed_data)
+
+        loaded_model = keras.models.load_model("80P-RSI-5D-10Y-Close.keras") 
+
+        
+        first_split_predictions =  loaded_model.predict(first_split_X_val)
+        second_split_predictions = loaded_model.predict(second_split_X_val)
+        latest_split_predictions = loaded_model.predict(latest_15_days_z_val)
+
+        # first_train_RSI = [[{'RSI': value[0]} for value in inner_list] for inner_list in first_split_X_val]
+        # second_train_RSI = [[{'RSI': value[0]} for value in inner_list] for inner_list in second_split_X_val]
+
+        # first_test_RSI = [{'RSI': float(value)} for value in first_split_y_val]
+        # second_test_RSI = [{'RSI': float(value)} for value in second_split_y_val]
+
+        first_split_rsi_list=[]
+        for i in range(len(first_split_predictions)):
+            first_split_rsi_list.append({**first_val_data[i], "RSI": float(first_split_predictions[i])})
+
+        # first_split_rsi_list = [{'RSI': float(value)} for value in first_split_predictions]
+        
+        second_split_rsi_list=[]
+        for i in range(len(second_split_predictions)):
+            second_split_rsi_list.append({**second_val_data[i], "RSI": float(second_split_predictions[i])})
+
+        # second_split_rsi_list = [{'RSI': float(value)} for value in second_split_predictions]
+        latest_split_rsi_list = [{'RSI': float(value)} for value in latest_split_predictions]
+        
+        current_date = datetime.now() 
+        
+        predicted_values = []
+        num_iterations = 30
+        temp = latest_15_days_z_val.copy()
+        for _ in range(num_iterations):
+            next_day = current_date + timedelta(days=_)
+            formatted_date = next_day.strftime('%Y-%m-%d')
+            x_pred = loaded_model.predict(temp)
+            predicted_values.append({"Date":formatted_date,"RSI":float(x_pred[0][0])})
+            temp[0, :-1, 0] = temp[0, 1:, 0]
+            temp[0, -1, 0] = x_pred[0][0]
+
+
+        #days_30_predicted_rsi_list = [{"Date":,'RSI': value} for value in predicted_values]
+        json_30_day_pred = json.dumps(predicted_values)
+        json_first_pred = json.dumps(first_split_rsi_list)
+        json_second_pred = json.dumps(second_split_rsi_list)   
+ 
+        return jsonify(
+            first_split_rsi = first_half_RSI,  
+            first_predicted_values = json_first_pred,
+            second_split_rsi = second_half_RSI,
+            second_split_predictions = json_second_pred,
+            latest_30_day_pred = json_30_day_pred 
+        ) 
+ 
+        
+  
 @app.route("/autoSector",methods=["GET"])
 def autoSector():
     x = yf.Tickers("M&M.NS HEROMOTOCO.NS BHARATFORG.NS MARUTI.NS BAJAJ-AUTO.NS BOSCHLTD.NS TATAMOTORS.NS EICHERMOT.NS TIINDIA.NS ASHOKLEY.NS MRF.NS SONACOMS.NS BALKRISIND.NS TVSMOTOR.NS MOTHERSON.NS")
@@ -967,4 +1251,4 @@ def getAllInfoBSE():
 if __name__ == "__main__":
     from waitress import serve
     serve(app, host="0.0.0.0", port=5000, threads='10')
-    #app.run(debug=True)
+    # app.run(debug=True)

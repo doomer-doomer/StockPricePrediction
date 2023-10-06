@@ -39,7 +39,6 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
-import AreaChart from './areachart';
 import { useDraggable } from "react-use-draggable-scroll";
 
 // import VisibilitySensor from 'react-visibility-sensor';
@@ -178,6 +177,10 @@ export default function SSRfreeHome() {
 
   const supercharts = (e)=>{
     router.push(`/stocks/chart/^NSEI`)
+  }
+
+  const prediction = (e)=>{
+    router.push("/stocks/predictions")
   }
 
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -923,6 +926,7 @@ const logout = () =>{
             <Dropdown.Item key="new"><Button auto light color="default" onClick={abc=>{screener()}}>Screener</Button></Dropdown.Item>
             <Dropdown.Item key="copy"><Button auto light color="default" onClick={abc=>{supercharts()}}>SuperCharts</Button></Dropdown.Item>
             <Dropdown.Item key="compare"><Button auto light color="default" onClick={abc=>{supercharts()}}>Compare</Button></Dropdown.Item>
+            <Dropdown.Item key="predict"><Button auto light color="default" onClick={abc=>{prediction()}}>Predictions</Button></Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
           <Navbar.Link href="#">Customers</Navbar.Link>
@@ -1038,7 +1042,9 @@ const logout = () =>{
                 effect='blur'
               />
             </div>
-            
+            <div className='shadowEffect' style={{
+              background: isDark ? "linear-gradient(180deg,hsla(0,0%,0%,0)58%, hsl(0,0%,0%) 100%)" : "linear-gradient(180deg,hsla(0,0%,0%,0)58%, hsl(0,0%,100%) 100%)"
+            }}></div>
                   {/* <img src="https://images.pexels.com/photos/355770/pexels-photo-355770.jpeg?cs=srgb&dl=pexels-pixabay-355770.jpg&fm=jpg"></img> */}
                 </div>
 
@@ -1127,7 +1133,7 @@ const logout = () =>{
                           data={nifty}
                           name="Nifty 50"
                           isDark = {isDark}
-                          height="280px"
+                          height="240px"
                           uniqueID="1"
                         /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
@@ -1144,7 +1150,7 @@ const logout = () =>{
                           data={bank}
                           name="Bank Nifty"
                           isDark = {isDark}
-                          height="280px"
+                          height="240px"
                           uniqueID="2"
                         /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
@@ -1160,7 +1166,7 @@ const logout = () =>{
                           data={sensex}
                           name="Sensex"
                           isDark = {isDark}
-                          height="280px"
+                          height="240px"
                           uniqueID="3"
                         /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
@@ -1178,13 +1184,13 @@ const logout = () =>{
                           data={niftyIT}
                           name="Bank Nifty"
                           isDark = {isDark}
-                          height="280px"
+                          height="240px"
                           uniqueID="5"
                         /> : <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>
 </div>
 
-<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.5)":"0px 4px 6px rgba(0,0,0,0.5)",backgroundColor:isDark? "black": "white"}}>
+<div className="innerboxindices" style={{boxShadow:isDark? "0px 4px 6px rgba(255,255,255,0.3)":"0px 4px 6px rgba(0,0,0,0.3)",backgroundColor:isDark? "black": "white"}}>
 <div className='subinnerboxindices'>
         <h4>Nifty Fin Serv</h4>
         <Avatar squared size="sm" onClick={abc=>travelSpecific('^NSEI')} icon={<box-icon name='link' color={isDark?"#FFFFFF" : "#16181A"}></box-icon>}></Avatar>
@@ -1194,7 +1200,7 @@ const logout = () =>{
                           data={niftyFinService}
                           name="Bank Nifty"
                           isDark = {isDark}
-                          height="280px"
+                          height="240px"
                           uniqueID="6"
                         /> :  <div style={{paddingLeft:"160px",paddingTop:"100px"}}><Loading color="success" size="md"/></div>}
           </div>

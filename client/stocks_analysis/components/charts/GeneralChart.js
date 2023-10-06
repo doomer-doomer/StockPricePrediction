@@ -12,11 +12,11 @@ class GeneralChart extends Component {
     
   componentDidMount() {
 
-    const { data, name,uniqueID, isDark, strokeWidth } = this.props;
+    const { data, name,uniqueID, strokeWidth } = this.props;
 
     const processedData = data.map(item => ({
         ...item,
-        Date: Date.parse(item.Date), // Assuming 'Date' is the date property in your data
+        Date: Date.parse(item.Date), 
       }));
 
     
