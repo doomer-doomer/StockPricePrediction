@@ -4,8 +4,8 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
 import Search from '@mui/icons-material/Search'
-import stock from '../../stock.js'
-import './prediction.css'
+import stock from '../src/app/stock'
+import '../src/app/stocks/predictions/prediction.css'
 import 'boxicons'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
