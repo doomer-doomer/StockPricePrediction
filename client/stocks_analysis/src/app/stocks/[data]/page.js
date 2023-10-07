@@ -31,10 +31,6 @@ import Link from "next/link";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-sand(Highcharts);
-HighchartsStock(Highcharts);
-Indicators(Highcharts)
-accumdis(Highcharts)
 
 import { Helmet } from 'react-helmet';
 import "./data.css"
@@ -63,7 +59,7 @@ const darkTheme = createTheme({
 export default function SingleStock(){
 
     const router = useRouter()
-    var axios = require('axios');
+    
     const pathname = usePathname();
     const [scriptname,setscriptname] = useState("");
     const [price,setprice] = useState("");
@@ -240,231 +236,7 @@ export default function SingleStock(){
     function travelSpecific(e){
       router.push(`/stocks/chart/${e}`)
     }
-  const areachart = {
-    chart:{
-      style:{
-        backgroundColor:isDark ? "#16181A" : "#ECEDEE"
-      }
-    },
-    rangeSelector: {
-      
-        buttonTheme: {
-          fill: isDark ? "#FFFFFF" : "#16181A",
-              stroke: 'none',
-              'stroke-width': 0,
-              r: 8,
-              style: {
-                  color: isDark ? "#16181A" : "#ECEDEE",
-                  fontWeight: 'bold'
-              },
-              states: {
-                  hover: {
-                    fill: isDark ? "#16181A" : "#ECEDEE",
-                      style: {
-                          color: isDark ? "#FFFFFF" : "#16181A"
-                      }
-                  },
-                  select: {
-                      fill: isDark ? "#16181A" : "#ECEDEE",
-                      style: {
-                          color: isDark ? "#FFFFFF" : "#16181A"
-                      }
-                  }
-                  // disabled: { ... }
-              }
-        },
-        labelStyle: {
-          color: isDark ? "#ECEDEE" : "#16181A",
-          fontWeight: 'bold'
-      },
-      inputPosition: {
-        align: 'left',
-        x: 0,
-        y: 0
-    },
-    buttonPosition: {
-        align: 'right',
-        x: 0,
-        y: 0
-    },
-    selected:null
-  },navigator:{
-    enabled:false
-  },
-    series: [
-      {
-        name: scriptAllData.longName,
-        type:"areaspline",
-        showInNavigator: true,
-        data: separatechart.map(obj=>
-          [new Date(obj.Date).getTime(),obj.Close]
-        ),
-        tooltip: {
-          valueDecimals: 2
-        },
-        fillColor: {
-          linearGradient: {
-              x1: 0,
-              y1: 0,
-              x2: 0,
-              y2: 1
-          },
-          stops: [
-              [0, "#6A0DAD"],
-              [1, "ABA9AD"]
-          ]
-      },
-      color:"#6A0DAD",
-      
-      },
-      
-      
-      
-    ],
-    yAxis:[
-      {
-        gridLineWidth: 0,
-      }
-    ],
-    tooltip: {
-    
-      shadow: true,
-      backgroundColor:  isDark ? "#16181A" : "#FFFFFF",
-      style: {
-        color:  isDark ? "#FFFFFF" : "#16181A"
-      },
-    },
-    
-  };
 
-
-
-
-  const candlestick ={
-    chart:{
-      animation: true,
-      style:{
-        backgroundColor:isDark ? "#16181A" : "#ECEDEE"
-      }
-    },
-      rangeSelector: {
-        inputPosition: {
-          align: 'left',
-          x: 0,
-          y: 0
-      },
-      buttonPosition: {
-          align: 'right',
-          x: 0,
-          y: 0
-      },
-      selected:null,
-      
-        buttonTheme: {
-          fill: isDark ? "#FFFFFF" : "#16181A",
-              stroke: 'none',
-              'stroke-width': 0,
-              r: 8,
-              style: {
-                  color: isDark ? "#16181A" : "#ECEDEE",
-                  fontWeight: 'bold'
-              },
-              states: {
-                  hover: {
-                    fill: isDark ? "#16181A" : "#ECEDEE",
-                      style: {
-                          color: isDark ? "#FFFFFF" : "#16181A"
-                      }
-                  },
-                  select: {
-                      fill: isDark ? "#16181A" : "#ECEDEE",
-                      style: {
-                          color: isDark ? "#FFFFFF" : "#16181A"
-                      }
-                  }
-                  // disabled: { ... }
-              }
-        },
-        labelStyle: {
-          color: isDark ? "#ECEDEE" : "#16181A",
-          fontWeight: 'bold'
-      },
-      
-    },
-    navigator:{
-      enabled:false
-    },
-  
-    series: [
-      {
-        type: 'candlestick',
-        name: scriptAllData.longName,
-        id: "static",
-        data: somedata.map(obj=>
-          [new Date(obj.Date).getTime(),obj.Open,obj.High,obj.Low,obj.Close]
-        )
-        //,[new Date(currdate.slice(0,10)).getTime(),parseFloat((scriptData.open).split(',').join("")),scriptData.high,scriptData.low,parseFloat(price.split(',').join(""))]
-      ,
-        color:"red",
-        upColor:"lightgreen",
-        yAxis:0,
-        fillOpacity: 1, 
-        color: 'lightgreen',
-        upColor: 'red'
-    },
-    {
-      type:"column",
-      id: 'volume',
-      name: 'Volume',
-      data: somedata.map(obj=>
-        [new Date(obj.Date).getTime(),obj.Volume]
-       )
-       //,[new Date(currdate.slice(0,10)).getTime(),parseFloat(scriptData.volume.split(',').join(""))]
-      ,
-      yAxis: 1,
-      tooltip: {
-        valueDecimals: 0, // Set the tooltip value decimals for the volume series
-      },
-      opacity: 0.5
-    },
-
-    
-    
-  ],
-  tooltip: {
-    
-    shadow: true,
-    backgroundColor:  isDark ? "#16181A" : "#FFFFFF",
-    style: {
-      color:  isDark ? "#FFFFFF" : "#16181A"
-    },
-  },
-  yAxis:[
-    
-    {
-      height: '100%',
-      resize: {
-        enabled: true
-      },
-      gridLineWidth: 0,
-    },
-    {
-      top: '60%',
-      height: '40%',
-      resize: {
-        enabled: true
-      },
-      gridLineWidth: 0,
-     
-    }
-    
-  ],
-  plotOptions: {
-    series: {
-      yAxis: 0, 
-    },
-  },
-    };
 
   async function getChartData(script){
     
@@ -514,8 +286,6 @@ export default function SingleStock(){
  
  
   }
-
-  
 
   async function getAllData(script){
    
@@ -781,196 +551,6 @@ export default function SingleStock(){
   }
 
  
-
-
-  const chartConfig = {
-    chart: {
-      type: 'column',
-      animation: true,
-      style:{
-        backgroundColor:isDark ? "#16181A" : "#ECEDEE"
-      }
-    },
-    xAxis: {
-      type: 'datetime'
-    },
-    title: {
-      text: 'Monthly Growth and Supply/Demand Analysis',
-      style: {
-        color: isDark ? "#FFFFFF" : "#16181A",
-      },
-    },
-    navigator:{
-      enabled:false
-    },
-    rangeSelector: {
-      buttonTheme: {
-        fill: isDark ? "#FFFFFF" : "#16181A",
-            stroke: 'none',
-            'stroke-width': 0,
-            r: 8,
-            style: {
-                color: isDark ? "#16181A" : "#ECEDEE",
-                fontWeight: 'bold'
-            },
-            states: {
-                hover: {
-                  fill: isDark ? "#16181A" : "#ECEDEE",
-                    style: {
-                        color: isDark ? "#FFFFFF" : "#16181A"
-                    }
-                },
-                select: {
-                    fill: isDark ? "#16181A" : "#ECEDEE",
-                    style: {
-                        color: isDark ? "#FFFFFF" : "#16181A"
-                    }
-                }
-                // disabled: { ... }
-            }
-        },
-        labelStyle: {
-          color: isDark ? "#ECEDEE" : "#16181A",
-          fontWeight: 'bold'
-      },
-        inputPosition: {
-          align: 'left',
-          x: 0,
-          y: 0
-      },
-      buttonPosition: {
-          align: 'right',
-          x: 0,
-          y: 0
-      },
-      selected:null
-    },
-   
-    yAxis: 
-     [
-        {
-          height: '60%',
-          resize: {
-            enabled: true
-          },
-          gridLineWidth:0
-        },
-        {
-          opposite:false,
-          top: '20%',
-          height: '40%',
-          resize: {
-            enabled: true
-          },
-          gridLineWidth:0
-         
-        },
-        {
-          top: '60%',
-          height: '20%',
-          resize: {
-            enabled: true
-          },
-          gridLineWidth:0
-         
-        },
-        {
-          top: '80%',
-          height: '20%',
-          resize: {
-            enabled: true
-          },
-          gridLineWidth:0
-         
-        }
-        
-      ]
-
-    ,
-    tooltip: {
-    
-      shadow: true,
-      backgroundColor:  isDark ? "#16181A" : "#FFFFFF",
-      style: {
-        color:  isDark ? "#FFFFFF" : "#16181A"
-      },
-    },
-    series: [
-      {
-        type: 'candlestick',
-        name: scriptAllData.longName,
-        id: "static",
-        data: growthData2.map(obj=>
-          [new Date(obj.Date).getTime(),(obj.Open).toFixed(2),obj.High,obj.Low,obj.Close]
-        ),
-        dataGrouping: {
-          enabled: false
-        },
-        tooltip: {
-          valueDecimals: 2
-        },
-        states: {
-          hover: {
-            lineWidth: 2
-          }
-        },
-        color: 'red',
-        upColor: 'lightgreen',
-        yAxis:0
-      },{
-        type:"column",
-        id: 'volume',
-        name: 'Volume',
-        data: growthData2.map(obj=>
-          [new Date(obj.Date).getTime(),obj.Volume]
-         )
-         //,[new Date(currdate.slice(0,10)).getTime(),parseFloat(scriptData.volume.split(',').join(""))]
-        ,
-        yAxis: 1,
-        tooltip: {
-          valueDecimals: 0, // Set the tooltip value decimals for the volume series
-        },
-        opacity: 0.5
-      },
-      {
-      type:"column",
-      id: 'growth',
-      name: 'Growth Percentage',
-      data: growthData2.map(obj=>
-        [new Date(obj.Date).getTime(),obj.Growth]
-       )
-       //,[new Date(currdate.slice(0,10)).getTime(),parseFloat(scriptData.volume.split(',').join(""))]
-      ,
-      yAxis: 2,
-      tooltip: {
-        valueDecimals: 0, // Set the tooltip value decimals for the volume series
-      },
-      opacity: 1
-    }, {
-      type:"column",
-      id: 'volumePercentage',
-      name: 'Supply/Demand Percentage',
-      data: growthData2.map(obj=>
-        [new Date(obj.Date).getTime(),obj.ChangeInVolume]
-       )
-       //,[new Date(currdate.slice(0,10)).getTime(),parseFloat(scriptData.volume.split(',').join(""))]
-      ,
-      yAxis: 2,
-      tooltip: {
-        valueDecimals: 0, // Set the tooltip value decimals for the volume series
-      },
-      opacity: 1
-    },{
-          type: 'ad',
-          linkedTo: "static",
-          yAxis: 3,
-          params: {
-              period: 3,
-              volumeSeriesID: 'volume'
-          }
-        },]
-  };
-
   async function getUserData(){
     try {
         const token = localStorage.getItem("sessionToken")
@@ -1060,7 +640,7 @@ export default function SingleStock(){
       }
     
 
-  },[isDark])
+  },[])
 
   useEffect(()=>{
     if (typeof window !== 'undefined') {
@@ -1337,7 +917,7 @@ export default function SingleStock(){
               <h1><b>Analysis</b></h1>
               <hr></hr>
               <div className='analysisContent'>
-              <VisibilitySensor onChange={handleVisibilityChange2}>
+              {/* <VisibilitySensor onChange={handleVisibilityChange2}>
                     <div className='subindicesChart'>
                     {chartVisible2 ?  <HighchartsReact
                         highcharts={Highcharts}
@@ -1350,7 +930,7 @@ export default function SingleStock(){
            
           
                       </div>
-              </VisibilitySensor>
+              </VisibilitySensor> */}
               
               </div>
             </div>
@@ -1473,7 +1053,7 @@ export default function SingleStock(){
           
          <div className='sepcharts'>
         
-              <VisibilitySensor onChange={handleVisibilityChange3}>
+              {/* <VisibilitySensor onChange={handleVisibilityChange3}>
                     <div className='subindicesChart'>
                     {chartVisible3 ?  <HighchartsReact
                         highcharts={Highcharts}
@@ -1487,7 +1067,7 @@ export default function SingleStock(){
           
                       </div>
               </VisibilitySensor>
-                
+                 */}
               
             </div>
           </div>

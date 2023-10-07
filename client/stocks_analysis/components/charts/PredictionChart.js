@@ -6,21 +6,50 @@ import * as am5stock from "@amcharts/amcharts5/stock";
 
 
 let stockChart;
-
+let root;
 class PredictionCharts extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isDark:false
+    };
+  }
     
+  componentDidUpdate(){
+     
+  }
     
+  splitData(data){
+    const totalPairs = Object.keys(data).length;
+
+    const sizeOfPart1 = Math.floor(totalPairs * 0.9);
+    const sizeOfPart2 = totalPairs - sizeOfPart1;
+
+    const part1 = data.slice(0, sizeOfPart1);
+    const part2 = data.slice(sizeOfPart1);
+    return [part1,part2];
+  }
   componentDidMount() {
 
-    const { data, name,uniqueID, strokeWidth } = this.props;
+    const { data,predictionData, name,uniqueID, strokeWidth } = this.props;
 
+    
     const processedData = data.map(item => ({
         ...item,
         Date: Date.parse(item.Date), 
       }));
 
+    const [trainData,testData] = this.splitData(processedData)
+
+    const processedPredictionData = predictionData.map(item => ({
+      ...item,
+      Date: Date.parse(item.Date), 
+    }));
+
     
-        let root = am5.Root.new(`${uniqueID}`);
+    root = am5.Root.new(`${uniqueID}`);
 
     root.setThemes([
       am5themes_Animated.new(root)
@@ -36,7 +65,8 @@ class PredictionCharts extends Component {
       }));
 
       let valueAxis = mainPanel.yAxes.push(am5xy.ValueAxis.new(root, {
-        renderer: am5xy.AxisRendererY.new(root, {})
+        renderer: am5xy.AxisRendererY.new(root, {}),
+        
       }));
       
       let dateAxis = mainPanel.xAxes.push(am5xy.GaplessDateAxis.new(root, {
@@ -44,29 +74,83 @@ class PredictionCharts extends Component {
           timeUnit: "day",
           count: 1
         },
-        renderer: am5xy.AxisRendererX.new(root, {})
+        renderer: am5xy.AxisRendererX.new(root, {}),
+        tooltip: am5.Tooltip.new(root, {})
       }));
 
-      let valueSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
+      let trainSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
         name: name,
         valueXField: "Date",
         valueYField:"RSI",
         xAxis: dateAxis,
         yAxis: valueAxis,
-        stroke: "#74ee15",
+        stroke: "#ef476f",
+        legendValueText: "{valueY}",
+        tooltip: am5.Tooltip.new(root, {
+          pointerOrientation: "horizontal",
+          labelText: "Train:{valueY}"
+        })
+    
+        //legendValueText: "Open: {openValueY}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}",
+        //tooltipText:"Open: {openValueYField}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}"
+      }));
 
+
+      let testSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
+        name: name,
+        valueXField: "Date",
+        valueYField:"RSI",
+        xAxis: dateAxis,
+        yAxis: valueAxis,
+        stroke: "#ffd166",
+        legendValueText: "{valueY}",
+        tooltip: am5.Tooltip.new(root, {
+          pointerOrientation: "horizontal",
+          labelText: "Test:{valueY}"
+        })
+    
+        //legendValueText: "Open: {openValueY}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}",
+        //tooltipText:"Open: {openValueYField}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}"
+      }));
+
+      let valSeries = mainPanel.series.push(am5xy.SmoothedXLineSeries.new(root, {
+        name: name,
+        valueXField: "Date",
+        valueYField:"RSI",
+        xAxis: dateAxis,
+        yAxis: valueAxis,
+        stroke: "#06d6a0",
+        legendValueText: "{valueY}",
+        tooltip: am5.Tooltip.new(root, {
+          pointerOrientation: "horizontal",
+          labelText: "Val:{valueY}"
+        })
     
         //legendValueText: "Open: {openValueY}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}",
         //tooltipText:"Open: {openValueYField}\nLow: {lowValueY}\nHigh: {highValueY}\nClose: {valueY}"
       }));
     
-    valueSeries.data.setAll(processedData);
-      root.interfaceColors.set("grid",am5.color("#74ee15"))
-      root.interfaceColors.set("text",am5.color("#74ee15"))
 
-      valueSeries.strokes.template.setAll({
+      trainSeries.strokes.template.setAll({
         strokeWidth: strokeWidth
       });
+      testSeries.strokes.template.setAll({
+        strokeWidth: strokeWidth
+      });
+      valSeries.strokes.template.setAll({
+        strokeWidth: strokeWidth
+      });
+
+      if(this.props.isDark === true){
+        root.interfaceColors.set("grid",am5.color("#CCCCCC"))
+        root.interfaceColors.set("text",am5.color("#ffffff"))
+      }else if(this.props.isDark === false){
+        root.interfaceColors.set("grid",am5.color("#CCCCCC"))
+        root.interfaceColors.set("text",am5.color("#000000"))
+      }else{
+        root.interfaceColors.set("grid",am5.color("#74ee15"))
+        root.interfaceColors.set("text",am5.color("#74ee15"))       
+      }
  
     // let valueLegend = mainPanel.plotContainer.children.push(am5stock.StockLegend.new(root, {
     //     stockChart: stockChart
@@ -116,7 +200,7 @@ class PredictionCharts extends Component {
       mainPanel.set("cursor", am5xy.XYCursor.new(root, {
         yAxis: valueAxis,
         xAxis: dateAxis,
-        snapToSeries: [valueSeries],
+        snapToSeries: [trainSeries],
         snapToSeriesBy: "y!"
       }));
       
@@ -178,9 +262,11 @@ class PredictionCharts extends Component {
     //   });
       
       //sbSeries.data.setAll(processedData);
-    
+      trainSeries.data.setAll(trainData);
+      testSeries.data.setAll(testData);
+      valSeries.data.setAll(processedPredictionData);
 
-    
+      stockChart.appear(1000,200);
   }
 
   componentWillUnmount() {
@@ -191,10 +277,11 @@ class PredictionCharts extends Component {
 
   render() {
     const {isDark, height,uniqueID} = this.props
+
     return (
         <div>
-<div id="chartcontrols" ></div>
-      <div id={uniqueID} style={{ width: "100%", height: height, color: isDark ? "#FFFFFF" : "black"}}></div>
+<div id="chartcontrols"></div>
+      <div id={uniqueID} style={{ width: "100%", height: height, color: this.props.isDark ? "#FFFFFF" : "black", backgroundColor : this.props.isDark ? "#000000" : "#ffffff"}}></div>
         </div>
         
     );
