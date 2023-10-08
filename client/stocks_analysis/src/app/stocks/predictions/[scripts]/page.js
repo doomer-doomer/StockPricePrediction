@@ -180,7 +180,7 @@ export default function Prediction(){
        </div>
        :
        <div style={{position:'relative',width:'100%',height:'100vh'}}>
-       <h1 style={{position:'absolute',top:'5%',left:'50%',translate:'-50% -50%'}}>30 Day&apos;s Prediction</h1>
+       <h2 style={{position:'absolute',top:'5%',left:'50%',translate:'-50% -50%'}}>30 Day&apos;s Prediction</h2>
        <box-icon onClick={abc=>changeSides()} style={{position:'absolute',top:'5%',left:'90%',translate:'-50% -50%',zIndex:4}} type={dir ? '' : "solid"} name='right-arrow' color={isDark?'#f7efef' : "#000000"}></box-icon>        
        <div>
        <box-icon onClick={abc=>changeSides()} style={{position:'absolute',top:'5%',left:'10%',translate:'-50% -50%',zIndex:4}} type={dir ? 'solid' : ""} name='left-arrow' color={isDark?'#f7efef' : "#000000"}></box-icon>
