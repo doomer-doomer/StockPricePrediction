@@ -18,6 +18,7 @@ import yfinance as yf
 from tensorflow import keras
 import concurrent.futures
 import numpy as np
+from sklearn.metrics import r2_score, mean_squared_error
 import gzip
 
 ist_offset = 5.5 * 60 * 60  
@@ -474,6 +475,14 @@ def getRSIPredictions(script):
         first_split_predictions =  loaded_model.predict(first_split_X_val)
         second_split_predictions = loaded_model.predict(second_split_X_val)
         latest_split_predictions = loaded_model.predict(latest_15_days_z_val)
+        
+        first_split_y_val = np.nan_to_num(first_split_y_val)
+        first_split_predictions = np.nan_to_num(first_split_predictions)
+
+        first_r2 = r2_score(first_split_y_val, first_split_predictions) 
+        second_r2 = r2_score(second_split_y_val,second_split_predictions) 
+        first_mse = mean_squared_error(first_split_y_val, first_split_predictions) 
+        second_mse = mean_squared_error(second_split_y_val,second_split_predictions) 
 
         # first_train_RSI = [[{'RSI': value[0]} for value in inner_list] for inner_list in first_split_X_val]
         # second_train_RSI = [[{'RSI': value[0]} for value in inner_list] for inner_list in second_split_X_val]
@@ -518,7 +527,11 @@ def getRSIPredictions(script):
             first_predicted_values = json_first_pred,
             second_split_rsi = second_half_RSI,
             second_split_predictions = json_second_pred,
-            latest_30_day_pred = json_30_day_pred 
+            latest_30_day_pred = json_30_day_pred,
+            fr2 = first_r2,
+            sr2 = second_r2,
+            fmse = first_mse,
+            smse = second_mse
         ) 
  
         
