@@ -299,6 +299,9 @@ def spliting_data_test(data):
     for i in range(n_steps, len(data)):
         X.append(data[i+1 - n_steps:i+1])
         y.append(data[i])
+    # for i in range(len(data)-n_steps-1):
+    #     X.append(data[i:(i+n_steps),0])
+    #     y.append(data[i+n_steps,0])
 
     X = np.array(X)
     y = np.array(y)
@@ -318,9 +321,11 @@ def spliting_data_val(data):
     z = []
     for i in range(steps, len(data)):
         z.append(data[i+1 - steps:i+1])
-
+        
     z = np.array(z)
     return z
+
+
 
 @app.route("/longhistory/<script>/<period>/<time>",methods=["GET"])
 def longinterval(script,period,time):
@@ -460,21 +465,26 @@ def getRSIPredictions(script):
         second_val_data = second_half[second_split_index:]
 
         latest_15_days = second_half[-15:]
-        
+        for_30_days = second_half[-90:]
+
         first_half_proccesed_data,first_half_RSI = data_processing(first_half)
         second_half_proccesed_data,second_half_RSI = data_processing(second_half)
         latest_15_days_proccesed_data,latest_RSI = data_processing(latest_15_days)
+        for_30_days_processed_data,for_30_days_RSI = data_processing(for_30_days)
        
         first_split_X_val,first_split_y_val = spliting_data_test(first_half_proccesed_data)
         second_split_X_val,second_split_y_val = spliting_data_test(second_half_proccesed_data)
         latest_15_days_z_val = spliting_data_val(latest_15_days_proccesed_data)
+        for_30_days_z_val = spliting_data_val(for_30_days_processed_data)
 
-        loaded_model = keras.models.load_model("80P-RSI-5D-10Y-Close.keras") 
+        # loaded_model = keras.models.load_model("80P-RSI-5D-10Y-Close.keras") 
+        loaded_model = keras.models.load_model("LSTM-GRU-LSTM-80P-RSI-5D-10Y-Close.keras") 
 
         
         first_split_predictions =  loaded_model.predict(first_split_X_val)
         second_split_predictions = loaded_model.predict(second_split_X_val)
         latest_split_predictions = loaded_model.predict(latest_15_days_z_val)
+        for_30_days_predictions = loaded_model.predict(for_30_days_z_val)
         
         first_split_y_val = np.nan_to_num(first_split_y_val)
         first_split_predictions = np.nan_to_num(first_split_predictions)
@@ -502,6 +512,8 @@ def getRSIPredictions(script):
 
         # second_split_rsi_list = [{'RSI': float(value)} for value in second_split_predictions]
         latest_split_rsi_list = [{'RSI': float(value)} for value in latest_split_predictions]
+
+        for_30_days_rsi_list = []
         
         current_date = datetime.now() 
         
@@ -513,6 +525,7 @@ def getRSIPredictions(script):
             formatted_date = next_day.strftime('%Y-%m-%d')
             x_pred = loaded_model.predict(temp)
             predicted_values.append({"Date":formatted_date,"RSI":float(x_pred[0][0])})
+            for_30_days_rsi_list.append({"Date":formatted_date,"RSI":float(for_30_days_predictions[_])})
             temp[0, :-1, 0] = temp[0, 1:, 0]
             temp[0, -1, 0] = x_pred[0][0]
 
@@ -521,6 +534,7 @@ def getRSIPredictions(script):
         json_30_day_pred = json.dumps(predicted_values)
         json_first_pred = json.dumps(first_split_rsi_list)
         json_second_pred = json.dumps(second_split_rsi_list)   
+        json_for_30_days = json.dumps(for_30_days_rsi_list)
  
         return jsonify(
             first_split_rsi = first_half_RSI,  
@@ -528,6 +542,7 @@ def getRSIPredictions(script):
             second_split_rsi = second_half_RSI,
             second_split_predictions = json_second_pred,
             latest_30_day_pred = json_30_day_pred,
+            for_30_days = json_for_30_days,
             fr2 = first_r2,
             sr2 = second_r2,
             fmse = first_mse,

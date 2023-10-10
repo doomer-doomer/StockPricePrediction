@@ -706,6 +706,32 @@ const businessNews = async()=>{
   });
  }
 
+const topGainers = NSEData.slice(0,10).map(kbc=>{
+    return <CustomTable
+        key={kbc.symbol}
+        name={kbc.name}
+        price = {kbc.price}
+        close={kbc.close}
+        symbol = {kbc.symbol}
+        isDark={!isDark}
+        profit = {kbc.profit}
+
+    />
+  })
+
+  const topLosers = NSEData.slice(10).map(kbc=>{
+    return <CustomTable
+        key={kbc.symbol}
+        name={kbc.name}
+        price = {kbc.price}
+        close={kbc.close}
+        symbol = {kbc.symbol}
+        isDark={!isDark}
+        profit = {kbc.profit}
+
+    />
+  })
+
 
 
 const allNSEData = async()=>{
@@ -735,7 +761,7 @@ const allNSEData = async()=>{
       };
     });
     mappedData.forEach(stock => {
-      stock.profit = stock.close - stock.price;
+      stock.profit = stock.price - stock.close;
     });
     const losers = mappedData.filter(stock => stock.profit < 0);
     const gainers = mappedData.filter(stock => stock.profit >= 0);
@@ -748,20 +774,6 @@ const allNSEData = async()=>{
     console.log("Top 10 Highest Profit Stocks:");
     console.log(gainers);
     setNSEData(mergedData)
-    setTopgainers(abc=>{
-      const data = mergedData.slice(5)
-      const box = data.map(kbc=>{
-        return <CustomTable
-            key={kbc.symbol}
-            name={kbc.name}
-            price = {kbc.price}
-            close={kbc.close}
-            symbol = {kbc.symbol}
-            isDark={isDark}
-
-        />
-      })
-    })
     
   })
   .catch(error => {
@@ -910,7 +922,6 @@ const logout = () =>{
     <NextUIProvider theme={isDark ? darkTheme : lightTheme}>
       <div>
         
-
         
       <Navbar shouldHideOnScroll={false} variant={"sticky"} css={{width:"100%", backgroundColor:"$background"}}>
       <Navbar.Toggle showIn="xs" aria-label="toggle navigation" />
@@ -1212,9 +1223,17 @@ const logout = () =>{
 
    </div>
    <div className='top'>
-      <div className='gainers'>
-        <h3>Gainers</h3>
-                        {topgainers}
+      <div className='gainers' style={{display:'grid',gridTemplateColumns:'auto auto',margin:'100px'}}>
+        <div>
+        <h2 style={{textAlign:'center'}}>Top Gainers</h2>
+                        {NSEData.length !==0? topGainers: <Loading size='lg' style={{display:'flex',width:'100%',height:'100%',justifyContent:'center',alignItems:'center'}} color="success"></Loading>}
+        </div>
+        <div>
+        <h2 style={{textAlign:'center'}}>Top Losers</h2>
+        {NSEData.length !==0? topLosers: <Loading size='lg' style={{display:'flex',width:'100%',height:'100%',justifyContent:'center',alignItems:'center'}} color="success"></Loading>}
+        </div>
+        
+          
 
     </div>
     <div className='gainers'>
@@ -1224,9 +1243,9 @@ const logout = () =>{
    
 
    <div>
-    <h2>Features</h2>
+    <h2 style={{display:'flex',justifyContent:'center'}}>Features</h2>
 
-      <div className='screnner'>
+      <div className='screnner' style={{margin:'100px'}}>
           <div className='screenerimg' >
             <Image src={isDark? ScreenerDark : ScreenerLight} width={800} alt='Screener'></Image>
             </div>
@@ -1260,7 +1279,7 @@ const logout = () =>{
           </div>
       </div>
 
-      <div className='charts'>
+      <div className='charts' style={{margin:'100px'}}>
         <div>
         <div>
                       <h4><u>Discover the Power of Superchart.</u></h4>
@@ -1293,7 +1312,7 @@ const logout = () =>{
         </div>
                     
                         <div className='chartimg'>
-                        <Image src={isDark? ChartDark : ChartLight} width={800} alt='Chart'></Image>
+                        <Image src={isDark? ChartDark : ChartLight} width={700} alt='Chart'></Image>
                         </div>
 
                         
